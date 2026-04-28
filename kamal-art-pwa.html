@@ -1,0 +1,5920 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e94560">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KamalArt">
+<meta name="description" content="500+ ASCII Arts Copy Paste App with AI Generator">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>🎨 Kamal Art</title>
+<style>
+:root {
+  --bg: #0d0d1a;
+  --bg2: #13132a;
+  --card: #1a1a35;
+  --accent: #e94560;
+  --accent2: #ff7b54;
+  --blue: #4361ee;
+  --teal: #00b4d8;
+  --gold: #ffd60a;
+  --text: #eef0ff;
+  --muted: #8892b0;
+  --border: rgba(255,255,255,0.08);
+  --glow: 0 0 20px rgba(233,69,96,0.3);
+  --r: 16px;
+  --header-h: 64px;
+  --nav-h: 64px;
+  --font: 'Baloo 2', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+/* ── HEADER ── */
+.header {
+  position: fixed; top:0; left:0; right:0;
+  height: var(--header-h);
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a0a2e 100%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+}
+
+.logo {
+  display: flex; align-items: center; gap: 10px;
+}
+
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: var(--glow);
+}
+
+.logo-text { line-height: 1; }
+.logo-text h1 { font-size: 17px; font-weight: 800; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.logo-text p { font-size: 10px; color: var(--muted); }
+
+.header-stats {
+  display: flex; gap: 12px;
+}
+
+.hstat {
+  text-align: center;
+  background: rgba(255,255,255,0.05);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+.hstat-n { font-size: 14px; font-weight: 800; color: var(--accent2); }
+.hstat-l { font-size: 9px; color: var(--muted); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed; bottom:0; left:0; right:0;
+  height: var(--nav-h);
+  background: linear-gradient(0deg, #0a0a18 0%, rgba(13,13,26,0.95) 100%);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px; cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  border: none; background: transparent;
+  color: var(--muted);
+  font-family: var(--font);
+}
+
+.nav-item.active { color: var(--accent); }
+
+.nav-item.active::before {
+  content: '';
+  position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 0 0 4px 4px;
+}
+
+.nav-icon { font-size: 22px; transition: transform 0.2s; }
+.nav-item.active .nav-icon { transform: scale(1.1); }
+.nav-label { font-size: 10px; font-weight: 600; }
+
+/* ── MAIN CONTENT ── */
+.main {
+  position: fixed;
+  top: var(--header-h);
+  bottom: var(--nav-h);
+  left: 0; right: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; padding: 12px; min-height: 100%; }
+.screen.active { display: block; }
+
+/* ── SEARCH BAR ── */
+.search-wrap {
+  position: relative; margin-bottom: 14px;
+}
+.search-wrap input {
+  width: 100%; padding: 13px 16px 13px 44px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  color: var(--text); font-size: 14px; font-family: var(--font);
+  outline: none; transition: border 0.2s;
+}
+.search-wrap input:focus { border-color: var(--accent); }
+.search-wrap input::placeholder { color: var(--muted); }
+.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+
+/* ── CATEGORY CHIPS ── */
+.cats {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
+  margin-bottom: 14px; scrollbar-width: none;
+}
+.cats::-webkit-scrollbar { display: none; }
+
+.cat-chip {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  color: var(--muted); font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: var(--font);
+  transition: all 0.2s; white-space: nowrap;
+}
+.cat-chip.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-color: transparent; color: #fff;
+  box-shadow: 0 4px 12px rgba(233,69,96,0.35);
+}
+
+/* ── ART GRID ── */
+.art-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+@media (min-width: 480px) {
+  .art-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* ── ART CARD ── */
+.art-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+}
+
+.art-card:active { transform: scale(0.96); }
+
+.art-card-header {
+  padding: 8px 10px 6px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.art-card-title {
+  font-size: 11px; font-weight: 700; color: var(--accent2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex: 1;
+}
+
+.art-badge {
+  font-size: 9px; padding: 2px 6px;
+  background: rgba(233,69,96,0.15); color: var(--accent);
+  border-radius: 10px; flex-shrink: 0; margin-left: 4px;
+}
+
+.art-preview {
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  line-height: 1.4;
+  max-height: 90px;
+  overflow: hidden;
+  color: #c9d1d9;
+  background: rgba(0,0,0,0.3);
+  white-space: pre;
+  position: relative;
+}
+
+.art-preview::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 30px;
+  background: linear-gradient(transparent, var(--card));
+}
+
+.art-actions {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; border-top: 1px solid var(--border);
+}
+
+.art-btn {
+  padding: 10px 6px;
+  border: none; cursor: pointer;
+  font-size: 12px; font-weight: 700; font-family: var(--font);
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  transition: all 0.2s;
+}
+
+.copy-btn {
+  background: rgba(0,184,148,0.15); color: #00b894;
+}
+.copy-btn:active { background: rgba(0,184,148,0.3); }
+
+.view-btn {
+  background: rgba(67,97,238,0.15); color: #74b9ff;
+}
+.view-btn:active { background: rgba(67,97,238,0.3); }
+
+/* ── BOTTOM SHEET (Art Detail) ── */
+.sheet-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200; display: none;
+  backdrop-filter: blur(4px);
+}
+.sheet-overlay.open { display: flex; align-items: flex-end; }
+
+.sheet {
+  background: var(--bg2);
+  border-radius: 20px 20px 0 0;
+  width: 100%; max-height: 85vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.sheet-handle {
+  width: 40px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 12px auto 0;
+  flex-shrink: 0;
+}
+
+.sheet-head {
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sheet-title { font-size: 18px; font-weight: 800; color: var(--accent2); }
+.sheet-close {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.08); border-radius: 50%;
+  border: none; color: var(--text); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.sheet-body {
+  padding: 16px 20px;
+  overflow-y: auto; flex: 1;
+}
+
+.sheet-art {
+  background: rgba(0,0,0,0.4);
+  border-radius: 12px; padding: 16px;
+  font-family: var(--mono); font-size: 13px;
+  line-height: 1.6; white-space: pre-wrap;
+  color: #e6edf3; border: 1px solid var(--border);
+  min-height: 100px;
+}
+
+.sheet-footer {
+  padding: 14px 20px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+}
+
+.big-btn {
+  padding: 14px; border-radius: 12px; border: none;
+  font-size: 15px; font-weight: 700; font-family: var(--font);
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.big-copy { background: linear-gradient(135deg, #00b894, #00a085); color: #fff; }
+.big-copy:active { opacity: 0.8; }
+.big-share { background: linear-gradient(135deg, var(--blue), var(--teal)); color: #fff; }
+.big-share:active { opacity: 0.8; }
+
+/* ── AI SCREEN ── */
+.ai-box {
+  background: var(--card); border-radius: var(--r);
+  border: 1px solid var(--border); padding: 16px;
+  margin-bottom: 14px;
+}
+
+.ai-box-title {
+  font-size: 16px; font-weight: 800; color: var(--accent2);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+}
+
+.ai-api-row {
+  display: flex; gap: 8px; margin-bottom: 14px;
+}
+
+.api-chip {
+  flex: 1; padding: 10px; text-align: center;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid var(--border); border-radius: 10px;
+  color: var(--muted); font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: var(--font); transition: all 0.2s;
+}
+.api-chip.sel { border-color: var(--accent); color: var(--accent); background: rgba(233,69,96,0.1); }
+
+.ai-input-row { display: flex; gap: 8px; }
+
+.ai-input {
+  flex: 1; padding: 13px 14px;
+  background: rgba(0,0,0,0.3); border: 1.5px solid var(--border);
+  border-radius: 12px; color: var(--text); font-size: 14px;
+  font-family: var(--font); outline: none; transition: border 0.2s;
+}
+.ai-input:focus { border-color: var(--accent); }
+.ai-input::placeholder { color: var(--muted); }
+
+.ai-go-btn {
+  padding: 13px 18px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; border-radius: 12px; color: #fff;
+  font-size: 22px; cursor: pointer; transition: all 0.2s;
+  box-shadow: var(--glow);
+}
+.ai-go-btn:active { transform: scale(0.95); }
+.ai-go-btn:disabled { opacity: 0.5; }
+
+.ai-result-box {
+  margin-top: 14px; display: none;
+  background: rgba(0,0,0,0.4); border-radius: 12px; padding: 14px;
+  border: 1px solid var(--border);
+}
+.ai-result-box.show { display: block; }
+
+.ai-result-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.ai-result-title { font-size: 13px; font-weight: 700; color: var(--accent2); }
+
+.ai-result-content {
+  font-family: var(--mono); font-size: 12px; line-height: 1.6;
+  white-space: pre-wrap; color: #e6edf3;
+}
+
+.ai-loader { text-align: center; padding: 20px; display: none; }
+.ai-loader.show { display: block; }
+.spinner { font-size: 30px; animation: spin 1s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── HOME SCREEN ── */
+.home-banner {
+  background: linear-gradient(135deg, #1a0533 0%, #0d1b4b 50%, #1a0533 100%);
+  border-radius: var(--r); padding: 20px 16px;
+  margin-bottom: 14px; border: 1px solid rgba(233,69,96,0.2);
+  position: relative; overflow: hidden;
+}
+
+.home-banner::before {
+  content: '🎨';
+  position: absolute; right: -10px; top: -10px;
+  font-size: 80px; opacity: 0.12;
+}
+
+.home-banner h2 { font-size: 22px; font-weight: 800; line-height: 1.2; }
+.home-banner h2 span { background: linear-gradient(90deg, var(--accent), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.home-banner p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+.home-banner-btns { display: flex; gap: 8px; margin-top: 14px; }
+.hbtn {
+  flex: 1; padding: 11px; border-radius: 10px; border: none;
+  font-size: 13px; font-weight: 700; font-family: var(--font);
+  cursor: pointer; transition: all 0.2s;
+}
+.hbtn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+.hbtn-secondary { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
+
+.section-title {
+  font-size: 15px; font-weight: 800; color: var(--text);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+}
+
+.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 8px; text-align: center;
+}
+.stat-num { font-size: 22px; font-weight: 800; color: var(--accent2); }
+.stat-lbl { font-size: 10px; color: var(--muted); }
+
+.quick-cats {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
+  margin-bottom: 14px;
+}
+
+.qcat {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 6px; text-align: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.qcat:active { transform: scale(0.95); }
+.qcat-icon { font-size: 22px; }
+.qcat-name { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 4px; }
+
+/* ── FAVORITES SCREEN ── */
+.empty-state {
+  text-align: center; padding: 50px 20px;
+  color: var(--muted);
+}
+.empty-icon { font-size: 50px; margin-bottom: 12px; }
+.empty-text { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.empty-sub { font-size: 13px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: calc(var(--nav-h) + 12px); left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #00b894; color: #fff; padding: 10px 20px;
+  border-radius: 50px; font-size: 13px; font-weight: 700;
+  z-index: 300; opacity: 0; transition: all 0.3s;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── INSTALL BANNER ── */
+.install-banner {
+  background: linear-gradient(135deg, rgba(67,97,238,0.2), rgba(0,180,216,0.2));
+  border: 1px solid rgba(67,97,238,0.3); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer;
+}
+.install-banner.hidden { display: none; }
+.install-icon { font-size: 24px; flex-shrink: 0; }
+.install-text { flex: 1; }
+.install-text h4 { font-size: 13px; font-weight: 700; color: var(--teal); }
+.install-text p { font-size: 11px; color: var(--muted); }
+.install-btn {
+  background: var(--blue); color: #fff; border: none;
+  padding: 7px 12px; border-radius: 8px; font-size: 12px;
+  font-weight: 700; font-family: var(--font); cursor: pointer;
+}
+
+/* ── RECENT ART STRIP ── */
+.recent-strip {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
+  scrollbar-width: none;
+}
+.recent-strip::-webkit-scrollbar { display: none; }
+
+.recent-card {
+  flex-shrink: 0; width: 110px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; cursor: pointer;
+  transition: all 0.2s;
+}
+.recent-card:active { transform: scale(0.95); }
+.recent-art-text {
+  padding: 8px; font-family: var(--mono); font-size: 8px;
+  line-height: 1.3; height: 60px; overflow: hidden;
+  white-space: pre; color: #c9d1d9;
+}
+.recent-card-foot {
+  padding: 5px 8px; border-top: 1px solid var(--border);
+  font-size: 10px; font-weight: 600; color: var(--accent2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── FAB ── */
+.fab {
+  position: fixed; bottom: calc(var(--nav-h) + 14px); right: 14px;
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 50%; border: none; color: #fff; font-size: 24px;
+  cursor: pointer; z-index: 90;
+  box-shadow: 0 4px 20px rgba(233,69,96,0.4);
+  display: none; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.fab:active { transform: scale(0.9); }
+.fab.show { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">🎨</div>
+    <div class="logo-text">
+      <h1>Kamal Art</h1>
+      <p>Copy Paste Arts</p>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><div class="hstat-n" id="totalCount">500+</div><div class="hstat-l">Arts</div></div>
+    <div class="hstat"><div class="hstat-n" id="favCount">0</div><div class="hstat-l">Saved</div></div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+
+    <div class="install-banner hidden" id="installBanner">
+      <div class="install-icon">📲</div>
+      <div class="install-text">
+        <h4>App Install करें!</h4>
+        <p>Home Screen पर Add करें</p>
+      </div>
+      <button class="install-btn" id="installBtn">Install</button>
+    </div>
+
+    <div class="home-banner">
+      <h2>500+ <span>ASCII Arts</span><br>Copy करो!</h2>
+      <p>Heart • Love • Animal • Emoji • Design और बहुत कुछ</p>
+      <div class="home-banner-btns">
+        <button class="hbtn hbtn-primary" onclick="goScreen('browse')">🎨 Arts देखो</button>
+        <button class="hbtn hbtn-secondary" onclick="goScreen('ai')">🤖 AI से बनाओ</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">500+</div><div class="stat-lbl">कुल Arts</div></div>
+      <div class="stat-card"><div class="stat-num">10</div><div class="stat-lbl">Categories</div></div>
+      <div class="stat-card"><div class="stat-num">Free</div><div class="stat-lbl">हमेशा के लिए</div></div>
+    </div>
+
+    <div class="section-title">⚡ Categories</div>
+    <div class="quick-cats">
+      <div class="qcat" onclick="openCat('heart')"><div class="qcat-icon">❤️</div><div class="qcat-name">Hearts</div></div>
+      <div class="qcat" onclick="openCat('love')"><div class="qcat-icon">💕</div><div class="qcat-name">Love</div></div>
+      <div class="qcat" onclick="openCat('animal')"><div class="qcat-icon">🐾</div><div class="qcat-name">Animals</div></div>
+      <div class="qcat" onclick="openCat('emoji')"><div class="qcat-icon">😊</div><div class="qcat-name">Emoji</div></div>
+      <div class="qcat" onclick="openCat('pattern')"><div class="qcat-icon">🔷</div><div class="qcat-name">Patterns</div></div>
+      <div class="qcat" onclick="openCat('special')"><div class="qcat-icon">⭐</div><div class="qcat-name">Special</div></div>
+      <div class="qcat" onclick="openCat('rose')"><div class="qcat-icon">🌹</div><div class="qcat-name">Roses</div></div>
+      <div class="qcat" onclick="openCat('design')"><div class="qcat-icon">🎨</div><div class="qcat-name">Designs</div></div>
+    </div>
+
+    <div class="section-title">🕐 Recently Copied</div>
+    <div class="recent-strip" id="recentStrip">
+      <div style="color:var(--muted);font-size:12px;padding:20px 0;">अभी तक कोई art copy नहीं किया</div>
+    </div>
+
+  </div>
+
+  <!-- BROWSE -->
+  <div class="screen" id="screen-browse">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Arts खोजो..." oninput="filterArts()">
+    </div>
+    <div class="cats" id="catStrip"></div>
+    <div class="art-grid" id="artGrid"></div>
+  </div>
+
+  <!-- AI -->
+  <div class="screen" id="screen-ai">
+    <div class="ai-box">
+      <div class="ai-box-title">🤖 AI Art Generator</div>
+
+      <div class="ai-api-row">
+        <div class="api-chip sel" data-api="deepseek" onclick="selAPI(this)">🧠 DeepSeek</div>
+        <div class="api-chip" data-api="gemini" onclick="selAPI(this)">✨ Gemini</div>
+      </div>
+
+      <div class="ai-input-row">
+        <input class="ai-input" id="aiPrompt" placeholder="जो चाहिए लिखो... (e.g. rose, heart, cat)">
+        <button class="ai-go-btn" id="aiGoBtn" onclick="generateAI()">⚡</button>
+      </div>
+
+      <div class="ai-loader" id="aiLoader">
+        <div class="spinner">⏳</div>
+        <p style="color:var(--muted);font-size:13px;margin-top:8px">AI बना रही है...</p>
+      </div>
+
+      <div class="ai-result-box" id="aiResultBox">
+        <div class="ai-result-head">
+          <div class="ai-result-title">✅ Generated Art</div>
+          <button class="big-btn big-copy" style="padding:7px 12px;border-radius:8px;font-size:12px" onclick="copyAI()">📋 Copy</button>
+        </div>
+        <div class="ai-result-content" id="aiResultContent"></div>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px;">
+      <div class="section-title" style="margin-bottom:12px">💡 Ideas</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px" id="ideaTags"></div>
+    </div>
+  </div>
+
+  <!-- FAVORITES -->
+  <div class="screen" id="screen-fav">
+    <div class="section-title">❤️ Saved Arts</div>
+    <div class="art-grid" id="favGrid"></div>
+    <div class="empty-state hidden" id="favEmpty">
+      <div class="empty-icon">💔</div>
+      <div class="empty-text">कोई Art Save नहीं है</div>
+      <div class="empty-sub">Arts देखते वक्त ❤️ दबाओ</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="goScreen('home')" id="nav-home">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" onclick="goScreen('browse')" id="nav-browse">
+    <span class="nav-icon">🎨</span>
+    <span class="nav-label">Arts</span>
+  </button>
+  <button class="nav-item" onclick="goScreen('ai')" id="nav-ai">
+    <span class="nav-icon">🤖</span>
+    <span class="nav-label">AI</span>
+  </button>
+  <button class="nav-item" onclick="goScreen('fav')" id="nav-fav">
+    <span class="nav-icon">❤️</span>
+    <span class="nav-label">Saved</span>
+  </button>
+</nav>
+
+<!-- FAB scroll to top -->
+<button class="fab" id="fab" onclick="scrollTop()">⬆️</button>
+
+<!-- BOTTOM SHEET -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet(event)">
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div class="sheet-title" id="sheetTitle"></div>
+      <button class="sheet-close" onclick="closeSheetBtn()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <div class="sheet-art" id="sheetContent"></div>
+    </div>
+    <div class="sheet-footer">
+      <button class="big-btn big-copy" onclick="copySheet()">📋 Copy करो</button>
+      <button class="big-btn big-share" onclick="shareSheet()">📤 Share करो</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// ARTS DATA
+// ══════════════════════════════════════════
+        const allArts = [
+            // ========== HEART ARTS (45) ==========
+            {
+                id: 1,
+                title: "Beating Heart",
+                category: "heart",
+                content: `❤️💖💚💙💜💝🫶🤍🤎
+💓💔💕💖💗💘💙💚💖❤️
+💞💟💌💙💛💗💓`
+            },
+            {
+                id: 2,
+                title: "Pixel Heart",
+                category: "heart",
+                content: `▓▓▓▓▓▓▓▓
+▓▓████▓▓
+▓█▓▓▓▓█▓
+▓█▓▓▓▓█▓
+▓▓█▓▓█▓▓
+▓▓▓██▓▓▓
+▓▓▓▓▓▓▓▓`
+            },
+            {
+                id: 3,
+                title: "3D Heart Design",
+                category: "heart",
+                content: `      .-""-.
+     / .--. \\
+    / /    \\ \\
+    | |    | |
+    | |.-""-.|
+   ///\`.:::::\`.
+  ||| ::/  \\:: ;
+  ||; ::\\__/:: ;
+   \\\\ '::::'  /
+    \`=':-..-'\``
+            },
+            {
+                id: 4,
+                title: "Heart Pattern 1",
+                category: "heart",
+                content: `❤️❤️❤️❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️❤️❤️❤️`
+            },
+            {
+                id: 5,
+                title: "Heart Pattern 2",
+                category: "heart",
+                content: `    ▓▓❤️▓▓
+  ▓▓❤️❤️❤️▓▓
+▓▓❤️❤️❤️❤️❤️▓▓
+  ▓▓❤️❤️❤️▓▓
+    ▓▓❤️▓▓
+      ▓▓▓
+        💞`
+            },
+            {
+                id: 6,
+                title: "Animated Heart",
+                category: "heart",
+                content: ` .d8888b.   .d8888b.  
+d88P  Y88b d88P  Y88b 
+888    888 Y88b.      
+888         "Y888b.   
+888  88888     "Y88b. 
+888    888       "888 
+Y88b  d88P Y88b  d88P 
+ "Y8888P88  "Y8888P"  `
+            },
+            {
+                id: 7,
+                title: "Heart in Box",
+                category: "heart",
+                content: `██████████████████████
+██                ██
+██      ❤️       ██
+██                ██
+██████████████████████`
+            },
+            {
+                id: 8,
+                title: "Small Hearts",
+                category: "heart",
+                content: `❤️ 💖 💙 💜 💝 🫶
+💗 💘 💓 💔 💕 💞
+💟 ❣️ 💌 💛 💞 💬`
+            },
+            {
+                id: 9,
+                title: "Heart Chain",
+                category: "heart",
+                content: `❤️──────────❤️
+      ❤️──────❤️
+          ❤️──❤️
+            ❤️`
+            },
+            {
+                id: 10,
+                title: "Broken Heart",
+                category: "heart",
+                content: `❤️‍🩹 💔 ❤️‍🩹
+💔   💔
+  💔💔
+    💔`
+            },
+            {
+                id: 11,
+                title: "Double Heart",
+                category: "heart",
+                content: `💕 💕
+💕   💕
+ 💕 💕
+  💕💕
+   💕`
+            },
+            {
+                id: 12,
+                title: "Heart Border",
+                category: "heart",
+                content: `💖💖💖💖💖💖💖💖💖💖💖💖
+💖                            💖
+💖       ❤️ ❤️ ❤️        💖
+💖                            💖
+💖💖💖💖💖💖💖💖💖💖💖💖`
+            },
+            {
+                id: 13,
+                title: "Heart Flower",
+                category: "heart",
+                content: `     ❤️
+   ❤️   ❤️
+❤️         ❤️
+   ❤️   ❤️
+     ❤️`
+            },
+            {
+                id: 14,
+                title: "Heart Arrow",
+                category: "heart",
+                content: `   ❤️
+  ❤️❤️
+ ❤️❤️❤️
+❤️❤️❤️❤️
+   ⬇️
+   ❤️`
+            },
+            {
+                id: 15,
+                title: "Big Heart",
+                category: "heart",
+                content: `███████
+█❤️❤️❤️█
+█❤️❤️❤️█
+ █❤️❤️█
+  █❤️█
+   ██`
+            },
+            {
+                id: 16,
+                title: "Heart Grid",
+                category: "heart",
+                content: `❤️ 💕 💖 💗 💘
+💓 💔 💕 💞 💟
+💌 ❣️ 🫶 💝 💛
+💚 💙 💜 🤎 🖤
+🤍 💯 💥 💫 💦`
+            },
+            {
+                id: 17,
+                title: "Heart Circle",
+                category: "heart",
+                content: `    💖💖💖
+  💖       💖
+ 💖         💖
+💖           💖
+ 💖         💖
+  💖       💖
+    💖💖💖`
+            },
+            {
+                id: 18,
+                title: "Heart Diamond",
+                category: "heart",
+                content: `   ❤️
+  ❤️❤️
+ ❤️❤️❤️
+❤️❤️❤️❤️
+ ❤️❤️❤️
+  ❤️❤️
+   ❤️`
+            },
+            {
+                id: 19,
+                title: "Floating Hearts",
+                category: "heart",
+                content: `❤️   💕   ❤️
+  💖     💖
+    💗 💗
+     💘
+    💞 💞
+  💓     💓
+💔         💔`
+            },
+            {
+                id: 20,
+                title: "Heart Star",
+                category: "heart",
+                content: `    ❤️
+   ❤️❤️
+  ❤️❤️❤️
+ ❤️❤️❤️❤️
+❤️❤️❤️❤️❤️
+ ⭐⭐⭐⭐⭐
+  ⭐⭐⭐⭐
+   ⭐⭐⭐
+    ⭐⭐
+     ⭐`
+            },
+            {
+                id: 21,
+                title: "Mini Hearts",
+                category: "heart",
+                content: `♥ ♥ ♥ ♥ ♥
+♡ ♡ ♡ ♡ ♡
+♥ ♥ ♥ ♥ ♥
+♡ ♡ ♡ ♡ ♡
+♥ ♥ ♥ ♥ ♥`
+            },
+            {
+                id: 22,
+                title: "Heart Wave",
+                category: "heart",
+                content: `❤️❤️❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️
+❤️❤️❤️❤️
+❤️❤️❤️
+❤️❤️
+❤️`
+            },
+            {
+                id: 23,
+                title: "Heart Tree",
+                category: "heart",
+                content: `     ❤️
+    ❤️❤️
+   ❤️❤️❤️
+  ❤️❤️❤️❤️
+ ❤️❤️❤️❤️❤️
+    |||
+    |||`
+            },
+            {
+                id: 24,
+                title: "Heart Frame",
+                category: "heart",
+                content: `💖💖💖💖💖💖💖
+💖             💖
+💖   💕 💕   💖
+💖   💕 💕   💖
+💖             💖
+💖💖💖💖💖💖💖`
+            },
+            {
+                id: 25,
+                title: "Heart Rain",
+                category: "heart",
+                content: `❤️  ❤️  ❤️
+  ❤️  ❤️
+❤️  ❤️  ❤️
+  ❤️  ❤️
+❤️  ❤️  ❤️
+  ❤️  ❤️
+❤️  ❤️  ❤️`
+            },
+            {
+                id: 26,
+                title: "Heart Spiral",
+                category: "heart",
+                content: `❤️❤️❤️❤️❤️
+❤️         ❤️
+❤️   ❤️❤️   ❤️
+❤️   ❤️❤️   ❤️
+❤️         ❤️
+❤️❤️❤️❤️❤️`
+            },
+            {
+                id: 27,
+                title: "Heart Cross",
+                category: "heart",
+                content: `❤️   ❤️
+  ❤️
+❤️   ❤️`
+            },
+            {
+                id: 28,
+                title: "Heart Pyramid",
+                category: "heart",
+                content: `❤️
+❤️❤️
+❤️❤️❤️
+❤️❤️❤️❤️
+❤️❤️❤️❤️❤️`
+            },
+            {
+                id: 29,
+                title: "Heart Box",
+                category: "heart",
+                content: `╔══════════╗
+║   ❤️❤️   ║
+║  ❤️  ❤️  ║
+║   ❤️❤️   ║
+╚══════════╝`
+            },
+            {
+                id: 30,
+                title: "Heart Pattern 3",
+                category: "heart",
+                content: `💖💖💖💖💖💖
+💖💖💖💖💖💖
+💖💖💖💖💖💖
+💖💖💖💖💖💖
+💖💖💖💖💖💖`
+            },
+            {
+                id: 31,
+                title: "Heart Design 1",
+                category: "heart",
+                content: `▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█❤️❤️❤️❤️❤️❤️❤️█
+█❤️❤️❤️❤️❤️❤️❤️█
+█❤️❤️❤️❤️❤️❤️❤️█
+█❤️❤️❤️❤️❤️❤️❤️█
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀`
+            },
+            {
+                id: 32,
+                title: "Heart Design 2",
+                category: "heart",
+                content: `┌─────────────────┐
+│                 │
+│      ❤️❤️      │
+│    ❤️    ❤️    │
+│      ❤️❤️      │
+│                 │
+└─────────────────┘`
+            },
+            {
+                id: 33,
+                title: "Heart Design 3",
+                category: "heart",
+                content: `▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓❤️❤️❤️❤️▓▓
+▓❤️❤️❤️❤️❤️▓
+▓▓❤️❤️❤️❤️▓▓
+▓▓▓❤️❤️❤️▓▓▓
+▓▓▓▓❤️❤️▓▓▓▓
+▓▓▓▓▓❤️▓▓▓▓▓`
+            },
+            {
+                id: 34,
+                title: "Heart Design 4",
+                category: "heart",
+                content: `•~•~•~•~•~•~•
+~❤️~❤️~❤️~❤️~
+•~•~•~•~•~•~•
+~❤️~❤️~❤️~❤️~
+•~•~•~•~•~•~•`
+            },
+            {
+                id: 35,
+                title: "Heart Design 5",
+                category: "heart",
+                content: `╭─────────────╮
+│             │
+│   ♥   ♥   │
+│    ♥ ♥    │
+│     ♥     │
+│             │
+╰─────────────╯`
+            },
+            {
+                id: 36,
+                title: "Heart Design 6",
+                category: "heart",
+                content: `✧･ﾟ: *✧･ﾟ:* ❤️ *:･ﾟ✧*:･ﾟ✧
+✧･ﾟ: *✧･ﾟ:* 💖 *:･ﾟ✧*:･ﾟ✧
+✧･ﾟ: *✧･ﾟ:* 💕 *:･ﾟ✧*:･ﾟ✧
+✧･ﾟ: *✧･ﾟ:* 💗 *:･ﾟ✧*:･ﾟ✧`
+            },
+            {
+                id: 37,
+                title: "Heart Design 7",
+                category: "heart",
+                content: `❣️─────────❣️
+──❣️─────❣️──
+────❣️─❣️────
+──────❣️──────
+────❣️─❣️────
+──❣️─────❣️──
+❣️─────────❣️`
+            },
+            {
+                id: 38,
+                title: "Heart Design 8",
+                category: "heart",
+                content: `❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️`
+            },
+            {
+                id: 39,
+                title: "Heart Design 9",
+                category: "heart",
+                content: `♡♡♡♡♡♡♡♡♡
+♡           ♡
+♡   ♥ ♥   ♡
+♡   ♥ ♥   ♡
+♡           ♡
+♡♡♡♡♡♡♡♡♡`
+            },
+            {
+                id: 40,
+                title: "Heart Design 10",
+                category: "heart",
+                content: `╔══╗ ♡
+║██║ ♡
+║(●)    ♡
+╚══╝ ♡
+  ♡   ♡
+    ♡`
+            },
+            {
+                id: 41,
+                title: "Heart Design 11",
+                category: "heart",
+                content: `░▒▓█ █▓▒░ ❤️ ░▒▓█ █▓▒░
+░▒▓█ █▓▒░ 💖 ░▒▓█ █▓▒░
+░▒▓█ █▓▒░ 💕 ░▒▓█ █▓▒░`
+            },
+            {
+                id: 42,
+                title: "Heart Design 12",
+                category: "heart",
+                content: `༺❤️༻
+༺💖༻
+༺💕༻
+༺💗༻
+༺💓༻`
+            },
+            {
+                id: 43,
+                title: "Heart Design 13",
+                category: "heart",
+                content: `▁ ▂ ▃ ▄ ▅ ▆ ▇ █ ❤️ █ ▇ ▆ ▅ ▄ ▃ ▂ ▁
+▁ ▂ ▃ ▄ ▅ ▆ ▇ █ 💖 █ ▇ ▆ ▅ ▄ ▃ ▂ ▁
+▁ ▂ ▃ ▄ ▅ ▆ ▇ █ 💕 █ ▇ ▆ ▅ ▄ ▃ ▂ ▁`
+            },
+            {
+                id: 44,
+                title: "Heart Design 14",
+                category: "heart",
+                content: `┏┓┏┓┏┓┏┓┏┓┏┓
+┗┛┗┛┗┛┗┛┗┛┗┛
+  ❤️   ❤️
+  💖   💖
+  💕   💕`
+            },
+            {
+                id: 45,
+                title: "Heart Design 15",
+                category: "heart",
+                content: `▛▀▀▀▀▀▀▀▀▀▜
+▌         ▐
+▌   ❤️   ▐
+▌         ▐
+▙▄▄▄▄▄▄▄▄▄▟`
+            },
+
+            // ========== LOVE ARTS (25) ==========
+            {
+                id: 46,
+                title: "Love Message 1",
+                category: "love",
+                content: `────(♥)(♥)(♥)────(♥)(♥)(♥) __ I LOVE YOU,
+──(♥)██████(♥)(♥)██████(♥) I'LL ALWAYS DO.
+─(♥)████████(♥)████████(♥) YOU MAKE ME HAPPY,
+─(♥)██████████████████(♥) I'M ALWAYS BLUE.
+──(♥)████████████████(♥) __ WHEN WE'RE APART,
+────(♥)████████████(♥) __ AND YOU'RE SO SMART.
+──────(♥)████████(♥) __ I LOVE YOU, DEAR,
+────────(♥)████(♥) __ WITH ALL MY HEART.
+──────────(♥)██(♥) OUR LOVE IS SO TRUE,
+────────────(♥) __ I LOVE YOU!`
+            },
+            {
+                id: 47,
+                title: "Will You Marry Me?",
+                category: "love",
+                content: `💍💍💍💍💍💍💍
+💍   👨   💍
+💍   💕   💍
+💍   👩   💍
+💍💍💍💍💍💍💍
+
+💍 WILL YOU MARRY ME? 💍
+     💌 💗`
+            },
+            {
+                id: 48,
+                title: "Couple Art",
+                category: "love",
+                content: `💖     💖
+  💖   💖   💖
+💖     👨     💖
+  💖   💛   💖
+    💖   💖
+      💖
+
+      💌
+      💑
+     ❤️‍🔥
+    💞
+   💞
+
+    💖     💖
+  💖   💖   💖
+💖     👩     💖
+  💖   💕   💖
+    💖   💖
+      💖`
+            },
+            {
+                id: 49,
+                title: "Love Forever",
+                category: "love",
+                content: `💕   💕
+   💕     💕
+  💕       💕
+ 💕    👨    💕
+💕           💕
+ 💕         💕
+  💕       💕
+   💕     💕
+    💕   💕
+     💕 💕
+      💕
+
+      💌
+     💑
+    💛
+   ❤️
+  💓
+ 💕
+💘
+
+    💕   💕
+   💕     💕
+  💕       💕
+ 💕    👩    💕
+💕    💕     💕
+ 💕         💕
+  💕       💕
+   💕     💕
+    💕   💕
+     💕 💕
+      💕`
+            },
+            {
+                id: 50,
+                title: "Love You",
+                category: "love",
+                content: `L      OOO    V   V  EEEEE
+L     O   O   V   V  E
+L     O   O   V   V  EEE
+L     O   O    V V   E
+LLLLL  OOO      V    EEEEE`
+            },
+            {
+                id: 51,
+                title: "Infinite Love",
+                category: "love",
+                content: `♾️ ❤️ ♾️
+❤️   ❤️
+♾️ ❤️ ♾️`
+            },
+            {
+                id: 52,
+                title: "Romantic Heart",
+                category: "love",
+                content: `╔══════════════════════╗
+║                       ║
+║   I ❤️ YOU          ║
+║                       ║
+╚══════════════════════╝`
+            },
+            {
+                id: 53,
+                title: "Love Birds",
+                category: "love",
+                content: `(•ө•)   (•ө•)
+ /\\       /\\
+/  \\     /  \\`
+            },
+            {
+                id: 54,
+                title: "Together Forever",
+                category: "love",
+                content: `👨 → 👨‍👩‍👦 → 👨‍👩‍👧 → 👨‍👩‍👧‍👧
+❤️ ❤️ ❤️ ❤️`
+            },
+            {
+                id: 55,
+                title: "My Love",
+                category: "love",
+                content: `M   M  Y   Y
+MM MM  Y   Y
+M M M   Y Y 
+M   M    Y  
+M   M    Y  
+         Y  
+         Y  `
+            },
+            {
+                id: 56,
+                title: "Love Story",
+                category: "love",
+                content: `💑 → 💏 → 💒 → 👨‍👩‍👧
+❤️ → 💕 → 💖 → 💗`
+            },
+            {
+                id: 57,
+                title: "Love You 3000",
+                category: "love",
+                content: `❤️ × 3000
+💖 × 3000
+💕 × 3000
+💗 × 3000`
+            },
+            {
+                id: 58,
+                title: "True Love",
+                category: "love",
+                content: `T R U E   L O V E
+❤️ ❤️ ❤️ ❤️
+💖 💖 💖 💖
+💕 💕 💕 💕
+💗 💗 💗 💗`
+            },
+            {
+                id: 59,
+                title: "Soulmates",
+                category: "love",
+                content: `👨 ♥ 👩
+💑 = ♾️
+💞 = ❤️ + 💖`
+            },
+            {
+                id: 60,
+                title: "Love is Life",
+                category: "love",
+                content: `L O V E
+I S
+L I F E
+❤️ 💖 💕 💗`
+            },
+            {
+                id: 61,
+                title: "Perfect Couple",
+                category: "love",
+                content: `💑 Perfect Couple 💑
+❤️ Made for each other ❤️
+💕 Forever together 💕
+💗 Always in love 💗`
+            },
+            {
+                id: 62,
+                title: "Love Heart",
+                category: "love",
+                content: `╭━━━━━━━━━╮
+│         │
+│   L❤️VE  │
+│         │
+╰━━━━━━━━━╯`
+            },
+            {
+                id: 63,
+                title: "You & Me",
+                category: "love",
+                content: `👨 + 👩 = 💑
+💑 + ❤️ = 💕
+💕 + 💖 = 💗
+💗 + 💓 = 💞`
+            },
+            {
+                id: 64,
+                title: "Endless Love",
+                category: "love",
+                content: `♾️ + ❤️ = 💕
+💕 + 💖 = 💗
+💗 + 💓 = 💞
+💞 + 💘 = 💝`
+            },
+            {
+                id: 65,
+                title: "My Everything",
+                category: "love",
+                content: `👨 = ❤️
+👩 = 💖
+💑 = 💕
+👨‍👩‍👧 = 💗`
+            },
+            {
+                id: 66,
+                title: "Love Always",
+                category: "love",
+                content: `A L W A Y S
+❤️ 💖 💕 💗
+L O V E   Y O U
+💑 💞 💘 💝`
+            },
+            {
+                id: 67,
+                title: "Heart of Love",
+                category: "love",
+                content: `╔════════════╗
+║            ║
+║   ❤️💖   ║
+║   💕💗   ║
+║            ║
+╚════════════╝`
+            },
+            {
+                id: 68,
+                title: "Forever Yours",
+                category: "love",
+                content: `F O R E V E R
+❤️ 💖 💕 💗
+Y O U R S
+💑 💞 💘 💝`
+            },
+            {
+                id: 69,
+                title: "Love Wins",
+                category: "love",
+                content: `❤️ WINS
+💖 WINS
+💕 WINS
+💗 WINS`
+            },
+            {
+                id: 70,
+                title: "Perfect Love",
+                category: "love",
+                content: `P E R F E C T
+❤️ 💖 💕 💗
+L O V E
+💑 💞 💘 💝`
+            },
+
+            // ========== ANIMAL ARTS (35) ==========
+            {
+                id: 71,
+                title: "ASCII Cat",
+                category: "animal",
+                content: `  /\\_/\\  
+ ( o.o ) 
+  > ^ <  `
+            },
+            {
+                id: 72,
+                title: "Dragon",
+                category: "animal",
+                content: `─────▄████▀█▄
+──▄█████████████████▄
+▄█████.▼.▼.▼.▼.▼.▼▼▼▼
+███████▄▲.▲.▲▲▲▲▲▲▲▲
+▀██████████████████▀
+───▀████████████▀`
+            },
+            {
+                id: 73,
+                title: "Butterfly",
+                category: "animal",
+                content: `    .''. 
+   :_ {}_: 
+   : /_\\ : 
+   : LILI : 
+   : LILI : 
+   : LILI : 
+   : LILI : 
+   : ; ; ; : 
+    '.'.' 
+     "`
+            },
+            {
+                id: 74,
+                title: "Dog Face",
+                category: "animal",
+                content: `  / \\__
+ (    @\\___
+ /         O
+/   (_____/
+/_____/   U`
+            },
+            {
+                id: 75,
+                title: "Elephant",
+                category: "animal",
+                content: `     ___.-~"~-._   __....__
+   .'    '    ' .""        ''''--.
+  /            .'               '  \\
+ /    .---.   /                   '  .
+|    /     './   .-'          ''-.   \\
+|   |   .-.  |  /   -..-.        '.   |
+|   |  |   | | |   /    \\         '.  |
+ \\   '  '-'  ' /  |     |     |    '  |
+  '.'         '    \\     \\     \\    '  /
+    '-._           '.    |     |     _.'
+        ''--..       '. _\\     /_ .'
+               '""'--.  '-----'  .
+                      ""------""`
+            },
+            {
+                id: 76,
+                title: "Fish",
+                category: "animal",
+                content: `><(((º>`
+            },
+            {
+                id: 77,
+                title: "Bird",
+                category: "animal",
+                content: `  \\
+ (o>
+//\\
+V_/__
+ ||`
+            },
+            {
+                id: 78,
+                title: "Snail",
+                category: "animal",
+                content: `  @v@
+ (----)
+( >__< )
+^^ ~~ ^^`
+            },
+            {
+                id: 79,
+                title: "Penguin",
+                category: "animal",
+                content: `  .-.
+ (o o)
+ | O |
+ |   |
+ '~~~'`
+            },
+            {
+                id: 80,
+                title: "Rabbit",
+                category: "animal",
+                content: ` (\__/) 
+ (•ㅅ•) 
+ /   づ`
+            },
+            {
+                id: 81,
+                title: "Bear",
+                category: "animal",
+                content: ` ʕ•ᴥ•ʔ`
+            },
+            {
+                id: 82,
+                title: "Mouse",
+                category: "animal",
+                content: `<:3 )~~~~`
+            },
+            {
+                id: 83,
+                title: "Owl",
+                category: "animal",
+                content: ` ,___,
+ [O.o]
+ /)__)
+ -"--"-`
+            },
+            {
+                id: 84,
+                title: "Spider",
+                category: "animal",
+                content: `  / _ \\
+\\_\\(_)/_/
+ _//"\\\\_
+  /   \\`
+            },
+            {
+                id: 85,
+                title: "Turtle",
+                category: "animal",
+                content: `  _____     ____
+ /      \\  |  o | 
+|        |/ ___\\| 
+|_________/     
+|_|_| |_|_|`
+            },
+            {
+                id: 86,
+                title: "Lion",
+                category: "animal",
+                content: `     .-""-.
+    /       \\
+   |  |   |  |
+   \\  \\ /  /
+    '-...-'`
+            },
+            {
+                id: 87,
+                title: "Monkey",
+                category: "animal",
+                content: `  .-"-.  
+ /  .-. \\
+|  /   \\ |
+| |\\_/| |
+ \\    / /
+  '--' / 
+   \`-'\`-`
+            },
+            {
+                id: 88,
+                title: "Horse",
+                category: "animal",
+                content: `    /\\_/\\
+   ( o.o )
+    > ^ <
+   /     \\
+  /_/ \\_\\`
+            },
+            {
+                id: 89,
+                title: "Cow",
+                category: "animal",
+                content: `  (__)  
+  (oo)  
+ /----\\/
+/ |  ||
+* | ||`
+            },
+            {
+                id: 90,
+                title: "Pig",
+                category: "animal",
+                content: `  ^__^
+  (oo)\\_______
+  (__)\\       )\\/\\
+      ||----w |
+      ||     ||`
+            },
+            {
+                id: 91,
+                title: "Chicken",
+                category: "animal",
+                content: `  ,--.
+ /   O>
+|   /\\
+|  /  \\
+'--'  '--'`
+            },
+            {
+                id: 92,
+                title: "Duck",
+                category: "animal",
+                content: `  _
+>(.)__
+ (___/`
+            },
+            {
+                id: 93,
+                title: "Frog",
+                category: "animal",
+                content: `  @..@
+ (----)
+( >__< )
+^^ ~~ ^^`
+            },
+            {
+                id: 94,
+                title: "Bat",
+                category: "animal",
+                content: `   /\\   /\\
+  /  \\ /  \\
+ /    V    \\
+/           \\`
+            },
+            {
+                id: 95,
+                title: "Sheep",
+                category: "animal",
+                content: `  \\  ^__^
+   \\ (oo)\\_______
+     (__)\\       )\\/\\
+         ||----w |
+         ||     ||`
+            },
+            {
+                id: 96,
+                title: "Goat",
+                category: "animal",
+                content: `  \\_/ 
+   (_)
+   / \\
+  /   \\`
+            },
+            {
+                id: 97,
+                title: "Wolf",
+                category: "animal",
+                content: `  /\\_/\\
+ / o o \\
+(   "   )
+ \\~(*)~/
+  \\~ ~/`
+            },
+            {
+                id: 98,
+                title: "Fox",
+                category: "animal",
+                content: `  /\\   /\\
+ /  \\ /  \\
+ \\   V   /
+  \\     /
+   \\   /`
+            },
+            {
+                id: 99,
+                title: "Deer",
+                category: "animal",
+                content: `     /\\       /\\
+    /  \\     /  \\
+   /    \\   /    \\
+  /      \\_/      \\`
+            },
+            {
+                id: 100,
+                title: "Squirrel",
+                category: "animal",
+                content: `  (\\(\\
+ ( . .)
+ c(")(")`
+            },
+            {
+                id: 101,
+                title: "Bee",
+                category: "animal",
+                content: `  \\  /
+ \\\\//
+-(oo)-
+ //\\\\
+  /  \\`
+            },
+            {
+                id: 102,
+                title: "Ladybug",
+                category: "animal",
+                content: `   /-\\ 
+ /   \\
+|  .  |
+ \\___/`
+            },
+            {
+                id: 103,
+                title: "Caterpillar",
+                category: "animal",
+                content: `  OOO 
+ (   )
+  \\_/`
+            },
+            {
+                id: 104,
+                title: "Snake",
+                category: "animal",
+                content: `  ~--~ 
+ /    \\
+|      |
+ \\    /
+  ~--~`
+            },
+            {
+                id: 105,
+                title: "Dolphin",
+                category: "animal",
+                content: `   .-.
+  /   \\
+ |     |
+  \\   /
+   '-'`
+            },
+
+            // ========== EMOJI ARTS (15) ==========
+            {
+                id: 106,
+                title: "Emoji Face Collection",
+                category: "emoji",
+                content: `😀 😃 😄 😁 😆 😅 😂 🤣
+☺️ 😊 😇 🥰 🥲 😘 😚 😋
+😜 😝 😛 🤑 🤗 🤭 🤫 🤔
+😐 😑 😶 😐 😏 😒 🙄 😬
+😌 😔 😪 🤤 😴 😷 🤒 🤕
+🤢 🤮 🤧 🥵 🥶 🥴 😵 🤯
+🤠 🥳 😎 🤓 🧐 😕 😟 🙁
+😮 😯 😲 😳 🥺 😦 😧 😨`
+            },
+            {
+                id: 107,
+                title: "Emoji Weather",
+                category: "emoji",
+                content: `☀️ 🌤️ ⛅ 🌥️ ☁️ 🌦️ 🌧️ ⛈️
+🌩️ 🌨️ ❄️ ☃️ ⛄ 🌬️ 💨 💧
+💦 ☔ 🌊 🌫️ 🏜️ 🏖️ 🌡️ 🔥
+🌋 🌋 🌋 🌋 🌋 🌋 🌋 🌋`
+            },
+            {
+                id: 108,
+                title: "Emoji Food",
+                category: "emoji",
+                content: `🍔 🍟 🍕 🥪 🥗 🍲 🍜 🍝
+🥘 🍛 🍚 🍙 🍘 🍣 🍤 🦪
+🍦 🍧 🍨 🍩 🍪 🎂 🍰 🧁
+🥧 🍫 🍬 🍭 🍮 🍯 🍼 🥛
+☕ 🍵 🧃 🍶 🍺 🍻 🥂 🍷
+🥃 🍸 🍹 🧉 🍾 🧊 🥄 🍴
+🍽️ 🥢 🥡 🥣 🧂 🥨 🥐 🥯
+🍞 🥖 🥨 🧀 🥚 🍳 🥓 🥞`
+            },
+            {
+                id: 109,
+                title: "Emoji Hearts",
+                category: "emoji",
+                content: `❤️ 🧡 💛 💚 💙 💜 🖤 🤍
+🤎 💔 ❤️‍🩹 ❤️‍🔥 💕 💞 💓 💗
+💖 💘 💝 💟 ☮️ ✝️ ☪️ 🕉️
+☸️ ✡️ 🔯 🕎 ☯️ ☦️ 🛐 ⛎
+♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏
+♐ ♑ ♒ ♓ ⚛️ 🈳 🈹 🈴
+🈺 🈶 🈚 🈸 🈷️ 🈂️ 🈁 🔣`
+            },
+            {
+                id: 110,
+                title: "Emoji Animals",
+                category: "emoji",
+                content: `🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼
+🐨 🐯 🦁 🐮 🐷 🐽 🐸 🐵
+🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤
+🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗
+🐴 🦄 🐝 🪱 🐛 🦋 🐌 🐞
+🐜 🪰 🪲 🪳 🦟 🦗 🕷️ 🕸️
+🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑
+🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳`
+            },
+            {
+                id: 111,
+                title: "Emoji Transportation",
+                category: "emoji",
+                content: `🚗 🚕 🚙 🚌 🚎 🏎️ 🚓 🚑
+🚒 🚐 🚚 🚛 🚜 🛴 🚲 🛵
+🏍️ 🛺 🚨 🚔 🚍 🚘 🚖 🚡
+🚠 🚟 🚃 🚋 🚞 🚝 🚄 🚅
+🚈 🚂 🚆 🚇 🚊 🚉 ✈️ 🛫
+🛬 🛩️ 💺 🛰️ 🚀 🛸 🚁 🛶
+⛵ 🚤 🛥️ 🛳️ ⛴️ 🚢 ⚓ 🚧`
+            },
+            {
+                id: 112,
+                title: "Emoji Objects",
+                category: "emoji",
+                content: `⌚ 📱 📲 💻 ⌨️ 🖥️ 🖨️ 🖱️
+🖲️ 🕹️ 🗜️ 💽 💾 💿 📀 📼
+📷 📸 📹 🎥 📽️ 🎞️ 📞 ☎️
+📟 📠 📺 📻 🎙️ 🎚️ 🎛️ 🧭
+⏱️ ⏲️ ⏰ 🕰️ ⌛ ⏳ 📡 🔋
+🔌 💡 🔦 🕯️ 🪔 🧯 🛢️ 💸
+💵 💴 💶 💷 💰 💳 💎 ⚖️`
+            },
+            {
+                id: 113,
+                title: "Emoji Symbols",
+                category: "emoji",
+                content: `❤️‍🔥 ❤️‍🩹 🧡 💛 💚 💙 💜 🖤
+🤍 🤎 💔 ❣️ 💕 💞 💓 💗
+💖 💘 💝 💟 ✨ 🔥 💯 ⭐
+🌟 💫 💥 💦 💨 🕳️ 🎯 🎰
+🧿 🔮 🪄 💈 ⚗️ 🔭 🔬 🕳️
+💊 💉 🩸 🩹 🩺 🚪 🛏️ 🛋️
+🪑 🚽 🚿 🛁 🪒 🧴 🧷 🧹`
+            },
+            {
+                id: 114,
+                title: "Emoji Nature",
+                category: "emoji",
+                content: `🌍 🌎 🌏 🌐 🗺️ 🗾 🧭 🏔️
+⛰️ 🌋 🗻 🏕️ 🏖️ 🏜️ 🏝️ 🏞️
+🌅 🌄 🌠 🎇 🎆 🌇 🌆 🏙️
+🌃 🌌 🌉 🌁 🏘️ 🏚️ 🏠 🏡
+🏢 🏣 🏤 🏥 🏦 🏨 🏩 🏪
+🏫 🏬 🏭 🏯 🏰 💒 🗽 🗼`
+            },
+            {
+                id: 115,
+                title: "Emoji Activities",
+                category: "emoji",
+                content: `⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉
+🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍
+🏏 🪃 🥅 ⛳ 🪁 🏹 🎣 🤿
+🥊 🥋 🎽 🛹 🛼 🛷 ⛸️ 🥌
+🎿 ⛷️ 🏂 🪂 🏋️‍♀️ 🤼‍♀️ 🤸‍♀️ ⛹️‍♀️
+🤺 🤾‍♀️ 🏌️‍♀️ 🏇 🧘‍♀️ 🏄‍♀️ 🏊‍♀️ 🤽‍♀️
+🚣‍♀️ 🧗‍♀️ 🚵‍♀️ 🚴‍♀️ 🏆 🥇 🥈 🥉`
+            },
+            {
+                id: 116,
+                title: "Emoji Flags",
+                category: "emoji",
+                content: `🏳️ 🏴 🏴‍☠️ 🏁 🚩 🏳️‍🌈 🏳️‍⚧️ 🏴‍☠️
+🇺🇳 🇦🇫 🇦🇽 🇦🇱 🇩🇿 🇦🇸 🇦🇩 🇦🇴
+🇦🇮 🇦🇶 🇦🇬 🇦🇷 🇦🇲 🇦🇼 🇦🇺 🇦🇼
+🇦🇿 🇧🇸 🇧🇭 🇧🇩 🇧🇧 🇧🇾 🇧🇪 🇧🇿
+🇧🇯 🇧🇲 🇧🇹 🇧🇴 🇧🇦 🇧🇼 🇧🇷 🇮🇴
+🇻🇬 🇧🇳 🇧🇬 🇧🇫 🇧🇮 🇰🇭 🇨🇲 🇨🇦
+🇮🇨 🇨🇻 🇧🇶 🇰🇾 🇨🇫 🇹🇩 🇨🇱 🇨🇳`
+            },
+            {
+                id: 117,
+                title: "Emoji People",
+                category: "emoji",
+                content: `👋 🤚 🖐️ ✋ 🖖 👌 🤌 🤏
+✌️ 🤞 🤟 🤘 🤙 👈 👉 👆
+🖕 👇 ☝️ 👍 👎 ✊ 👊 🤛
+🤜 👏 🙌 👐 🤲 🤝 🙏 ✍️
+💅 🤳 💪 🦾 🦿 🦵 🦶 👂
+🦻 👃 🧠 🫀 🫁 🦷 🦴 👀
+👁️ 👅 👄 💋 🩸 🫦`
+            },
+            {
+                id: 118,
+                title: "Emoji Celebration",
+                category: "emoji",
+                content: `🎉 🎊 🎂 🎈 🎁 🎀 🎗️ 🎟️
+🎫 🎖️ 🏆 🏅 🥇 🥈 🥉 ⚽
+🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🎱
+🪀 🎯 🪁 🎣 🪂 🎿 ⛸️ 🥌`
+            },
+            {
+                id: 119,
+                title: "Emoji Music",
+                category: "emoji",
+                content: `🎵 🎶 🎼 🎤 🎧 📻 🎷 🎸
+🎹 🎺 🎻 🪕 🥁 🪘 🎧 🎚️
+🎛️ 🎙️ 📻 📺 🎥 📽️ 🎞️ 📹`
+            },
+            {
+                id: 120,
+                title: "Emoji Time",
+                category: "emoji",
+                content: `🕐 🕑 🕒 🕓 🕔 🕕 🕖 🕗
+🕘 🕙 🕚 🕛 🕜 🕝 🕞 🕟
+🕠 🕡 🕢 🕣 🕤 🕥 🕦 🕧
+⌚ ⏰ ⏱️ ⏲️ 🕰️ ⌛ ⏳ 📅
+📆 🗓️ 🕛 🕧 🕐 🕜 🕑 🕝`
+            },
+
+            // ========== PATTERN ARTS (20) ==========
+            {
+                id: 121,
+                title: "Geometric Pattern",
+                category: "pattern",
+                content: `████████
+█░░░░░░█
+█░████░█
+█░█░░█░█
+█░█░░█░█
+█░████░█
+█░░░░░░█
+████████`
+            },
+            {
+                id: 122,
+                title: "Wave Pattern",
+                category: "pattern",
+                content: `▁▂▃▄▅▆▇█▇▆▅▄▃▂▁
+▁▂▃▄▅▆▇█▇▆▅▄▃▂▁
+▁▂▃▄▅▆▇█▇▆▅▄▃▂▁
+▁▂▃▄▅▆▇█▇▆▅▄▃▂▁`
+            },
+            {
+                id: 123,
+                title: "Checkerboard",
+                category: "pattern",
+                content: `██  ██  ██  ██
+  ██  ██  ██  ██
+██  ██  ██  ██
+  ██  ██  ██  ██
+██  ██  ██  ██
+  ██  ██  ██  ██`
+            },
+            {
+                id: 124,
+                title: "Diagonal Pattern",
+                category: "pattern",
+                content: `\\ \\ \\ \\ \\ \\
+ \\ \\ \\ \\ \\ \\
+\\ \\ \\ \\ \\ \\
+ \\ \\ \\ \\ \\ \\
+\\ \\ \\ \\ \\ \\
+ \\ \\ \\ \\ \\ \\`
+            },
+            {
+                id: 125,
+                title: "Dot Pattern",
+                category: "pattern",
+                content: `•   •   •   •   •
+  •   •   •   •   •
+•   •   •   •   •
+  •   •   •   •   •
+•   •   •   •   •`
+            },
+            {
+                id: 126,
+                title: "Border Pattern",
+                category: "pattern",
+                content: `╔════════════════════╗
+║                  ║
+║                  ║
+║                  ║
+╚════════════════════╝`
+            },
+            {
+                id: 127,
+                title: "Circle Pattern",
+                category: "pattern",
+                content: `○ ○ ○ ○ ○
+ ○ ○ ○ ○
+○ ○ ○ ○ ○
+ ○ ○ ○ ○
+○ ○ ○ ○ ○`
+            },
+            {
+                id: 128,
+                title: "Star Pattern",
+                category: "pattern",
+                content: `☆ ★ ☆ ★ ☆
+★ ☆ ★ ☆ ★
+☆ ★ ☆ ★ ☆
+★ ☆ ★ ☆ ★
+☆ ★ ☆ ★ ☆`
+            },
+            {
+                id: 129,
+                title: "Arrow Pattern",
+                category: "pattern",
+                content: `→ → → → →
+→ → → → →
+→ → → → →
+→ → → → →`
+            },
+            {
+                id: 130,
+                title: "Triangle Pattern",
+                category: "pattern",
+                content: `▲
+▲ ▲
+▲ ▲ ▲
+▲ ▲ ▲ ▲`
+            },
+            {
+                id: 131,
+                title: "Square Pattern",
+                category: "pattern",
+                content: `■ □ ■ □ ■
+□ ■ □ ■ □
+■ □ ■ □ ■
+□ ■ □ ■ □
+■ □ ■ □ ■`
+            },
+            {
+                id: 132,
+                title: "Heart Pattern Grid",
+                category: "pattern",
+                content: `❤️ 💖 💙 💜 💝
+💖 ❤️ 💜 💝 💙
+💙 💜 ❤️ 💖 💝
+💜 💝 💖 ❤️ 💙
+💝 💙 💜 💖 ❤️`
+            },
+            {
+                id: 133,
+                title: "Diamond Pattern",
+                category: "pattern",
+                content: `◆ ◇ ◆ ◇ ◆
+◇ ◆ ◇ ◆ ◇
+◆ ◇ ◆ ◇ ◆
+◇ ◆ ◇ ◆ ◇
+◆ ◇ ◆ ◇ ◆`
+            },
+            {
+                id: 134,
+                title: "Cross Pattern",
+                category: "pattern",
+                content: `┼   ┼   ┼
+  ┼   ┼
+┼   ┼   ┼
+  ┼   ┼
+┼   ┼   ┼`
+            },
+            {
+                id: 135,
+                title: "Zigzag Pattern",
+                category: "pattern",
+                content: `↗ ↘ ↗ ↘ ↗ ↘
+↘ ↗ ↘ ↗ ↘ ↗
+↗ ↘ ↗ ↘ ↗ ↘
+↘ ↗ ↘ ↗ ↘ ↗`
+            },
+            {
+                id: 136,
+                title: "Line Pattern",
+                category: "pattern",
+                content: `│ │ │ │ │ │
+│ │ │ │ │ │
+│ │ │ │ │ │
+│ │ │ │ │ │
+│ │ │ │ │ │`
+            },
+            {
+                id: 137,
+                title: "Box Pattern",
+                category: "pattern",
+                content: `┌─┬─┬─┬─┐
+├─┼─┼─┼─┤
+├─┼─┼─┼─┤
+├─┼─┼─┼─┤
+└─┴─┴─┴─┘`
+            },
+            {
+                id: 138,
+                title: "Grid Pattern",
+                category: "pattern",
+                content: `┏━━━┳━━━┳━━━┓
+┃   ┃   ┃   ┃
+┣━━━╋━━━╋━━━┫
+┃   ┃   ┃   ┃
+┣━━━╋━━━╋━━━┫
+┃   ┃   ┃   ┃
+┗━━━┻━━━┻━━━┛`
+            },
+            {
+                id: 139,
+                title: "Circle Grid",
+                category: "pattern",
+                content: `○─○─○─○─○
+│       │
+○   ○   ○
+│       │
+○─○─○─○─○`
+            },
+            {
+                id: 140,
+                title: "Hex Pattern",
+                category: "pattern",
+                content: ` ╱╲╱╲╱╲
+╲╱╲╱╲╱
+ ╱╲╱╲╱╲
+╲╱╲╱╲╱
+ ╱╲╱╲╱╲`
+            },
+
+            // ========== SPECIAL ARTS (25) ==========
+            {
+                id: 141,
+                title: "Flower Design",
+                category: "special",
+                content: `             . . .                         
+              \\|/                          
+            \`–+–\`                        
+              /|\\                          
+             \` | \`                         
+               |                           
+               |                           
+           ,–'#\`–.                       
+           |#######|                       
+        _.-'#######\`-._                    
+     ,-'###############\`-.                 
+   ,'#####################\`,               
+  /#########################\\              
+ |###########################|             
+|#############################|            
+|#############################|            
+|#############################|            
+|#############################|            
+ |###########################|             
+  \\#########################/              
+   \`.#####################,'               
+     \`._###############_,'                 
+        \`–..#####..–'`
+            },
+            {
+                id: 142,
+                title: "Rocket Ship",
+                category: "special",
+                content: `░░░.☆.░░░
+╚╩╩╩╩╩╝
+◊☻ ◊◊◊◊◊◊◊◊◊◊☻
+◊◊ ◊ ◊◊◊◊◊◊◊◊◊◊◊◊◊◊◊╗
+◊◊◊◊◊◊◊☻
+╚╚╝╚╝╚╝
+╗╚╗
+╗╚╗
+╗╚╗    Just dropped down to say
+╗╚╗    I love you!
+╗╚╗   
+╗╚╗☻/
+╗╚╗/▌
+╗╚╗/  \\`
+            },
+            {
+                id: 143,
+                title: "Mandal Design",
+                category: "special",
+                content: `          .:^:.
+        .:^^^^^:.
+      .:^^^^^^^^^:.
+    .:^^^^^^^^^^^^^:.
+  .:^^^^^^^^^^^^^^^^^:.
+  :^^^^^^^^^^^^^^^^^^^:
+  :^^^^^^^^^^^^^^^^^^^:
+  '.:^^^^^^^^^^^^^^^^:.'
+    '.:^^^^^^^^^^^^:.'
+      '.:^^^^^^^^:.'
+        '.:^^^:.'
+          '.:.'`
+            },
+            {
+                id: 144,
+                title: "Zen Circle",
+                category: "special",
+                content: `          .......
+       ..         ..
+     .               .
+    .                 .
+   .                   .
+   .                   .
+   .                   .
+    .                 .
+     .               .
+       ..         ..
+          .......`
+            },
+            {
+                id: 145,
+                title: "Tree of Life",
+                category: "special",
+                content: `        *
+       ***
+      *****
+     *******
+    *********
+       |||
+       |||
+      |   |`
+            },
+            {
+                id: 146,
+                title: "Sun Design",
+                category: "special",
+                content: `     \\   /
+   .--.O.--.
+    \\     /
+   -   O   -
+    /     \\
+   '--.O.--'
+     /   \\`
+            },
+            {
+                id: 147,
+                title: "Moon Design",
+                category: "special",
+                content: `      .
+     . .
+    .   .
+   .     .
+  .       .
+   .     .
+    .   .
+     . .
+      .`
+            },
+            {
+                id: 148,
+                title: "Star Design",
+                category: "special",
+                content: `    .
+   . .
+  .   .
+ .......
+.       .
+ .     .
+  .   .
+   . .
+    .`
+            },
+            {
+                id: 149,
+                title: "Snowflake",
+                category: "special",
+                content: `   *   *
+  * * * *
+   * * *
+* * * * * *
+   * * *
+  * * * *
+   *   *`
+            },
+            {
+                id: 150,
+                title: "Spiral Design",
+                category: "special",
+                content: `    -----
+   /     \\
+  /       \\
+ /         \\
+|           |
+ \\         /
+  \\       /
+   \\     /
+    -----`
+            },
+            {
+                id: 151,
+                title: "Pyramid",
+                category: "special",
+                content: `        /\\
+       /  \\
+      /    \\
+     /      \\
+    /        \\
+   /          \\
+  /            \\
+ /              \\
+/________________\\`
+            },
+            {
+                id: 152,
+                title: "Diamond Special",
+                category: "special",
+                content: `   /\\
+  /  \\
+ /    \\
+/      \\
+\\      /
+ \\    /
+  \\  /
+   \\/`
+            },
+            {
+                id: 153,
+                title: "Cube",
+                category: "special",
+                content: `    +-----+
+   /     /|
+  +-----+ |
+  |     | +
+  |     |/
+  +-----+`
+            },
+            {
+                id: 154,
+                title: "Infinity Symbol",
+                category: "special",
+                content: `  .--.   .--.
+ /    \\ /    \\
+|      |      |
+ \\    / \\    /
+  '--'   '--'`
+            },
+            {
+                id: 155,
+                title: "Yin Yang",
+                category: "special",
+                content: `   .------.
+  /        \\
+ |    ○    |
+ |   / \\   |
+  \\  \\ /  /
+   '------'`
+            },
+            {
+                id: 156,
+                title: "Atom",
+                category: "special",
+                content: `   ○
+  / \\
+ /   \\
+|  ○  |
+ \\   /
+  \\ /
+   ○`
+            },
+            {
+                id: 157,
+                title: "Crystal",
+                category: "special",
+                content: `   /\\
+  /  \\
+ /    \\
+/______\\
+\\      /
+ \\    /
+  \\  /
+   \\/`
+            },
+            {
+                id: 158,
+                title: "Web Design",
+                category: "special",
+                content: `   \\   /
+  -- O --
+   /   \\
+  |     |
+   \\   /
+    ---`
+            },
+            {
+                id: 159,
+                title: "Circuit Board",
+                category: "special",
+                content: `┌───┬───┬───┐
+│   │   │   │
+├───┼───┼───┤
+│   │   │   │
+├───┼───┼───┤
+│   │   │   │
+└───┴───┴───┘`
+            },
+            {
+                id: 160,
+                title: "Fractal Design",
+                category: "special",
+                content: `   /\\
+  /\\/\\
+ /\\/\\/\\
+/\\/\\/\\/\\`
+            },
+            {
+                id: 161,
+                title: "Spiral Galaxy",
+                category: "special",
+                content: `    .
+   ...
+  .....
+ .......
+.........
+ .......
+  .....
+   ...
+    .`
+            },
+            {
+                id: 162,
+                title: "Radar",
+                category: "special",
+                content: `   /\\
+  /  \\
+ /    \\
+/______\\
+\\      /
+ \\    /
+  \\  /
+   \\/`
+            },
+            {
+                id: 163,
+                title: "Satellite",
+                category: "special",
+                content: `   +---+
+   |   |
+ --+---+--
+   |   |
+   +---+`
+            },
+            {
+                id: 164,
+                title: "Planet",
+                category: "special",
+                content: `   *****
+  **   **
+ *       *
+*         *
+ *       *
+  **   **
+   *****`
+            },
+            {
+                id: 165,
+                title: "Comet",
+                category: "special",
+                content: `   *
+  * *
+ *   *
+*     *
+ *   *
+  * *
+   *`
+            },
+
+            // ========== TEXT ARTS (20) ==========
+            {
+                id: 166,
+                title: "Welcome Sign",
+                category: "text",
+                content: `╔══════════════════════════════════════╗
+║                              ║
+║        W E L C O M E        ║
+║                              ║
+╚══════════════════════════════════════╝`
+            },
+            {
+                id: 167,
+                title: "Thank You",
+                category: "text",
+                content: `████████╗██    ██  █████╗ ███╗   ██╗██╗  ██╗
+╚══██╔══╝██    ██ ██╔══██╗████╗  ██║██║ ██╔╝
+   ██║   ██    ██ ███████║██╔██╗ ██║█████╔╝ 
+   ██║   ██    ██ ██╔══██║██║╚██╗██║██╔═██╗ 
+   ██║   ╚██████╔╝██║  ██║██║ ╚████║██║  ██╗
+   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝`
+            },
+            {
+                id: 168,
+                title: "Hello World",
+                category: "text",
+                content: ` _    _      _ _       __          __        _     _ 
+| |  | |    | | |      \\ \\        / /       | |   | |
+| |__| | ___| | | ___   \\ \\  /\\  / /__  _ __| | __| |
+|  __  |/ _ \\ | |/ _ \\   \\ \\/  \\/ / _ \\| '__| |/ _\` |
+| |  | |  __/ | | (_) |   \\  /\\  / (_) | |  | | (_| |
+|_|  |_|\\___|_|_|\\___/     \\/  \\/ \\___/|_|  |_|\\__,_|`
+            },
+            {
+                id: 169,
+                title: "Good Morning",
+                category: "text",
+                content: `  ____                 _     __  __             _             
+ / ___| ___   ___   __| |   |  \\/  | ___  _ __ (_)_ __   __ _ 
+| |  _ / _ \\ / _ \\ / _\` |   | |\\/| |/ _ \\| '_ \\| | '_ \\ / _\` |
+| |_| | (_) | (_) | (_| |   | |  | | (_) | | | | | | | | (_| |
+ \\____|\\___/ \\___/ \\__,_|   |_|  |_|\\___/|_| |_|_|_| |_|\\__, |
+                                                        |___/`
+            },
+            {
+                id: 170,
+                title: "Good Night",
+                category: "text",
+                content: `  ____                 _     _   _ _       _   _           
+ / ___| ___   ___   __| |   | \\ | (_)_ __ | |_(_)_   _____ 
+| |  _ / _ \\ / _ \\ / _\` |   |  \\| | | '_ \\| __| \\ \\ / / _ \\
+| |_| | (_) | (_) | (_| |   | |\\  | | | | | |_| |\\ V /  __/
+ \\____|\\___/ \\___/ \\__,_|   |_| \\_|_|_| |_|\\__|_| \\_/ \\___|`
+            },
+            {
+                id: 171,
+                title: "The End",
+                category: "text",
+                content: ` _______ _            ______      _ 
+|__   __| |          |  ____|    | |
+   | |  | |__   ___  | |__  __  _| |
+   | |  | '_ \\ / _ \\ |  __| \\ \\/ / |
+   | |  | | | |  __/ | |____ >  <| |
+   |_|  |_| |_|\\___| |______/_/\\_\\_|`
+            },
+            {
+                id: 172,
+                title: "Success",
+                category: "text",
+                content: `╔══════════════════════╗
+║      SUCCESS!      ║
+╚══════════════════════╝
+        ✓ ✓ ✓
+    Everything done!`
+            },
+            {
+                id: 173,
+                title: "Error",
+                category: "text",
+                content: `╔══════════════════════╗
+║       ERROR!       ║
+╚══════════════════════╝
+        ✗ ✗ ✗
+    Something wrong!`
+            },
+            {
+                id: 174,
+                title: "Loading",
+                category: "text",
+                content: `╔══════════════════════╗
+║     LOADING...     ║
+╚══════════════════════╝
+    [███████    ] 70%`
+            },
+            {
+                id: 175,
+                title: "Complete",
+                category: "text",
+                content: `╔══════════════════════╗
+║     COMPLETE!      ║
+╚══════════════════════╝
+    [██████████] 100%`
+            },
+            {
+                id: 176,
+                title: "Happy Birthday",
+                category: "text",
+                content: `╔════════════════════════════╗
+║     HAPPY BIRTHDAY!     ║
+╚════════════════════════════╝
+        🎂 🎉 🎈
+    Many happy returns!`
+            },
+            {
+                id: 177,
+                title: "Congratulations",
+                category: "text",
+                content: `╔════════════════════════════╗
+║   CONGRATULATIONS!    ║
+╚════════════════════════════╝
+        🏆 🎊 👏
+    Well done!`
+            },
+            {
+                id: 178,
+                title: "Sorry",
+                category: "text",
+                content: `╔══════════════════════╗
+║       SORRY        ║
+╚══════════════════════╝
+        😔 🙏
+    My apologies!`
+            },
+            {
+                id: 179,
+                title: "Goodbye",
+                category: "text",
+                content: `╔══════════════════════╗
+║      GOODBYE       ║
+╚══════════════════════╝
+        👋 🏃
+    See you soon!`
+            },
+            {
+                id: 180,
+                title: "Warning",
+                category: "text",
+                content: `╔══════════════════════╗
+║      WARNING!      ║
+╚══════════════════════╝
+        ⚠️ ⚠️ ⚠️
+    Be careful!`
+            },
+            {
+                id: 181,
+                title: "Information",
+                category: "text",
+                content: `╔══════════════════════╗
+║    INFORMATION     ║
+╚══════════════════════╝
+        ℹ️ 📋
+    Important info!`
+            },
+            {
+                id: 182,
+                title: "Question",
+                category: "text",
+                content: `╔══════════════════════╗
+║      QUESTION      ║
+╚══════════════════════╝
+        ❓ 🤔
+    What do you think?`
+            },
+            {
+                id: 183,
+                title: "Answer",
+                category: "text",
+                content: `╔══════════════════════╗
+║       ANSWER       ║
+╚══════════════════════╝
+        ✅ 💡
+    Here it is!`
+            },
+            {
+                id: 184,
+                title: "Notice",
+                category: "text",
+                content: `╔══════════════════════╗
+║       NOTICE       ║
+╚══════════════════════╝
+        📢 🔊
+    Attention please!`
+            },
+            {
+                id: 185,
+                title: "Alert",
+                category: "text",
+                content: `╔══════════════════════╗
+║       ALERT!       ║
+╚══════════════════════╝
+        🚨 🔔
+    Quick action needed!`
+            },
+
+            // ========== ROSE ARTS (20) ==========
+            {
+                id: 186,
+                title: "Rose Heart Design",
+                category: "rose",
+                content: `🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹
+🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹
+🌹🌹🤍🤍🌹🌹🤍🤍🌹🌹
+🌹🤍🌹🌹🤍🤍🌹🌹🤍🌹
+🌹🤍🌹🌹🌹🌹🌹🌹🤍🌹
+🌹🌹🤍🌹🌹🌹🌹🤍🌹🌹
+🌹🌹🌹🤍🌹🌹🤍🌹🌹🌹
+🌹🌹🌹🌹🤍🤍🌹🌹🌹🌹
+🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹
+🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹`
+            },
+            {
+                id: 187,
+                title: "Rose with Heart",
+                category: "rose",
+                content: `🌹   ❤️   🌹
+  🌹     🌹
+    🌹 🌹
+     ❤️
+    🌹 🌹
+  🌹     🌹
+🌹   ❤️   🌹`
+            },
+            {
+                id: 188,
+                title: "Beautiful Rose",
+                category: "rose",
+                content: `     @
+    @ @
+   @   @
+  @     @
+ @       @
+@         @
+ \\       /
+  \\     /
+   \\   /
+    \\ /
+     V`
+            },
+            {
+                id: 189,
+                title: "Rose in Vase",
+                category: "rose",
+                content: `    🌹
+   🌹🌹
+  🌹❤️🌹
+   🌹🌹
+    | |
+    | |
+   /   \\
+  /     \\
+ /_______\\`
+            },
+            {
+                id: 190,
+                title: "Rose Bouquet",
+                category: "rose",
+                content: `🌹 🌹 🌹
+ 🌹🌹🌹
+🌹🌹🌹🌹
+  | | |
+  | | |
+ \\_____/`
+            },
+            {
+                id: 191,
+                title: "Rose Garden",
+                category: "rose",
+                content: `🌹   🌹   🌹
+  🌹   🌹
+🌹   🌹   🌹
+  🌹   🌹
+🌹   🌹   🌹`
+            },
+            {
+                id: 192,
+                title: "Red Rose",
+                category: "rose",
+                content: `    .::.
+   .:'  .
+ .:'   ::
+::    :'
+:'  .:
+::.'
+     玫瑰`
+            },
+            {
+                id: 193,
+                title: "Rose Stem",
+                category: "rose",
+                content: `    O
+   O O
+  O   O
+ O     O
+O       O
+   | |
+   | |
+  /   \\`
+            },
+            {
+                id: 194,
+                title: "Rose Bud",
+                category: "rose",
+                content: `   .-.
+  (   )
+   ) (
+  (   )
+   '-'
+    |
+    |`
+            },
+            {
+                id: 195,
+                title: "Rose Pattern",
+                category: "rose",
+                content: `🌹🌹🌹🌹🌹
+🌹🌹🌹🌹🌹
+🌹🌹🌹🌹🌹
+🌹🌹🌹🌹🌹
+🌹🌹🌹🌹🌹`
+            },
+            {
+                id: 196,
+                title: "Rose Border",
+                category: "rose",
+                content: `🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹
+🌹                                              🌹
+🌹                                              🌹
+🌹                                              🌹
+🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹🌹`
+            },
+            {
+                id: 197,
+                title: "Rose Frame",
+                category: "rose",
+                content: `🌹🌹🌹🌹🌹🌹🌹
+🌹           🌹
+🌹    ❤️    🌹
+🌹           🌹
+🌹🌹🌹🌹🌹🌹🌹`
+            },
+            {
+                id: 198,
+                title: "Rose Love",
+                category: "rose",
+                content: `🌹 + ❤️ = 💕
+🌹 + 🌹 = 💖
+💕 + 💖 = 💗`
+            },
+            {
+                id: 199,
+                title: "Rose Message",
+                category: "rose",
+                content: `🌹 For you 🌹
+   ❤️ Always ❤️
+🌹 Forever 🌹`
+            },
+            {
+                id: 200,
+                title: "Rose Special",
+                category: "rose",
+                content: `    🌹
+   🌹🌹
+  🌹💕🌹
+   🌹🌹
+    🌹
+    |
+    |
+   💖`
+            },
+            {
+                id: 201,
+                title: "Rose Collection",
+                category: "rose",
+                content: `🌹🌹🌹  🌹🌹🌹  🌹🌹🌹
+🌹🌹🌹  🌹🌹🌹  🌹🌹🌹
+🌹🌹🌹  🌹🌹🌹  🌹🌹🌹`
+            },
+            {
+                id: 202,
+                title: "Rose Heart",
+                category: "rose",
+                content: `   🌹   🌹
+ 🌹       🌹
+🌹   ❤️   🌹
+ 🌹       🌹
+   🌹   🌹
+     🌹`
+            },
+            {
+                id: 203,
+                title: "Rose Circle",
+                category: "rose",
+                content: `    🌹🌹🌹
+  🌹       🌹
+ 🌹         🌹
+🌹           🌹
+ 🌹         🌹
+  🌹       🌹
+    🌹🌹🌹`
+            },
+            {
+                id: 204,
+                title: "Rose Diamond",
+                category: "rose",
+                content: `   🌹
+  🌹🌹
+ 🌹❤️🌹
+🌹🌹🌹🌹
+ 🌹❤️🌹
+  🌹🌹
+   🌹`
+            },
+            {
+                id: 205,
+                title: "Final Rose",
+                category: "rose",
+                content: `🌹🌹🌹🌹🌹🌹🌹🌹🌹
+🌹                     🌹
+🌹      I 💕 U       🌹
+🌹                     🌹
+🌹🌹🌹🌹🌹🌹🌹🌹🌹`
+            },
+
+            // ========== DESIGN ARTS (25) ==========
+            {
+                id: 206,
+                title: "Fancy Design 1",
+                category: "design",
+                content: `╔════════════════════╗
+║    BEAUTIFUL     ║
+║     DESIGN       ║
+╚════════════════════╝
+    ✨ 🎨 🖌️
+Creative artwork!`
+            },
+            {
+                id: 207,
+                title: "Modern Design",
+                category: "design",
+                content: `┌─────────────────┐
+│   MODERN ART    │
+├─────────────────┤
+│  Innovative     │
+│  Creative       │
+│  Unique         │
+└─────────────────┘`
+            },
+            {
+                id: 208,
+                title: "Abstract Design",
+                category: "design",
+                content: `▲ △ ▲ △ ▲
+▢ ▣ ▢ ▣ ▢
+◈ ◇ ◈ ◇ ◈
+○ ◎ ○ ◎ ○`
+            },
+            {
+                id: 209,
+                title: "Geometric Design",
+                category: "design",
+                content: `⬟ ⬢ ⬟ ⬢ ⬟
+⬡ ⬣ ⬡ ⬣ ⬡
+◭ ◮ ◭ ◮ ◭
+◸ ◹ ◸ ◹ ◸`
+            },
+            {
+                id: 210,
+                title: "Pattern Design",
+                category: "design",
+                content: `▞▞▞▞▞▞▞▞
+▚▚▚▚▚▚▚▚
+▞▞▞▞▞▞▞▞
+▚▚▚▚▚▚▚▚`
+            },
+            {
+                id: 211,
+                title: "Border Design",
+                category: "design",
+                content: `╭──────────────╮
+│              │
+│  Fancy Border│
+│              │
+╰──────────────╯`
+            },
+            {
+                id: 212,
+                title: "Frame Design",
+                category: "design",
+                content: `┏━━━━━━━━━━━━━━┓
+┃              ┃
+┃  Nice Frame  ┃
+┃              ┃
+┗━━━━━━━━━━━━━━┛`
+            },
+            {
+                id: 213,
+                title: "Art Design",
+                category: "design",
+                content: `███████████████
+██           ██
+██   ART     ██
+██   DESIGN  ██
+██           ██
+███████████████`
+            },
+            {
+                id: 214,
+                title: "Creative Design",
+                category: "design",
+                content: `•~•~•~•~•~•~•~•
+~ CREATIVE  ~
+•~•~•~•~•~•~•~•
+~ DESIGN    ~
+•~•~•~•~•~•~•~•`
+            },
+            {
+                id: 215,
+                title: "Elegant Design",
+                category: "design",
+                content: `╔═══════════════╗
+║   ELEGANT    ║
+║   DESIGN     ║
+╚═══════════════╝
+    ♛ ♚ ♕
+Sophisticated!`
+            },
+            {
+                id: 216,
+                title: "Minimal Design",
+                category: "design",
+                content: `+---------------+
+|               |
+|   MINIMAL     |
+|               |
++---------------+`
+            },
+            {
+                id: 217,
+                title: "Luxury Design",
+                category: "design",
+                content: `✦ ✦ ✦ ✦ ✦
+✦ LUXURY  ✦
+✦ DESIGN  ✦
+✦ ✦ ✦ ✦ ✦`
+            },
+            {
+                id: 218,
+                title: "Premium Design",
+                category: "design",
+                content: `★ ☆ ★ ☆ ★
+☆ PREMIUM ☆
+★ DESIGN  ★
+☆ ★ ☆ ★ ☆`
+            },
+            {
+                id: 219,
+                title: "Gold Design",
+                category: "design",
+                content: `▄▄▄▄▄▄▄▄▄▄▄
+█ GOLD   █
+█ DESIGN █
+▀▀▀▀▀▀▀▀▀▀▀`
+            },
+            {
+                id: 220,
+                title: "Silver Design",
+                category: "design",
+                content: `══════════════
+ SILVER DESIGN 
+══════════════`
+            },
+            {
+                id: 221,
+                title: "Diamond Design",
+                category: "design",
+                content: `◈ ◈ ◈ ◈ ◈
+◈DIAMOND◈
+◈DESIGN ◈
+◈ ◈ ◈ ◈ ◈`
+            },
+            {
+                id: 222,
+                title: "Crystal Design",
+                category: "design",
+                content: `✧ ✧ ✧ ✧ ✧
+✧CRYSTAL✧
+✧DESIGN ✧
+✧ ✧ ✧ ✧ ✧`
+            },
+            {
+                id: 223,
+                title: "Royal Design",
+                category: "design",
+                content: `♔ ♕ ♖ ♗ ♘ ♙
+♚ ♛ ♜ ♝ ♞ ♟
+ ROYAL DESIGN 
+♔ ♕ ♖ ♗ ♘ ♙`
+            },
+            {
+                id: 224,
+                title: "Magic Design",
+                category: "design",
+                content: `✩ ✩ ✩ ✩ ✩
+✩ MAGIC  ✩
+✩ DESIGN ✩
+✩ ✩ ✩ ✩ ✩`
+            },
+            {
+                id: 225,
+                title: "Fantasy Design",
+                category: "design",
+                content: `☾ ☽ ☾ ☽ ☾
+☽FANTASY☽
+☾DESIGN ☾
+☽ ☾ ☽ ☾ ☽`
+            },
+            {
+                id: 226,
+                title: "Future Design",
+                category: "design",
+                content: `◊ ◊ ◊ ◊ ◊
+◊FUTURE ◊
+◊DESIGN ◊
+◊ ◊ ◊ ◊ ◊`
+            },
+            {
+                id: 227,
+                title: "Tech Design",
+                category: "design",
+                content: `[][][][][]
+[] TECH  []
+[] DESIGN[]
+[][][][][]`
+            },
+            {
+                id: 228,
+                title: "Cyber Design",
+                category: "design",
+                content: `▛▀▀▀▀▀▀▀▀▜
+▌ CYBER  ▐
+▌ DESIGN ▐
+▙▄▄▄▄▄▄▄▄▟`
+            },
+            {
+                id: 229,
+                title: "Neon Design",
+                category: "design",
+                content: `▞▚▞▚▞▚▞▚▞▚
+▚ NEON  ▞
+▞ DESIGN▚
+▚▞▚▞▚▞▚▞▚▞`
+            },
+            {
+                id: 230,
+                title: "Final Design",
+                category: "design",
+                content: `╔══════════════╗
+║  FINAL       ║
+║  DESIGN      ║
+║  COLLECTION  ║
+╚══════════════╝
+    🎉 🏁 ✅
+Complete set!`
+            },
+            
+            // ========== EXTRA SPECIAL ARTS (50+) ==========
+            {
+                id: 231,
+                title: "Rose Heart Special",
+                category: "heart",
+                content: `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+🟥🟥⬜⬜🟥🟥⬜⬜🟥🟥
+🟥⬜🟥🟥⬜⬜🟥🟥⬜🟥
+🟥⬜🟥🟥🟥🟥🟥🟥⬜🟥
+🟥🟥⬜🟥🟥🟥🟥⬜🟥🟥
+🟥🟥🟥⬜🟥🟥⬜🟥🟥🟥
+🟥🟥🟥🟥⬜⬜🟥🟥🟥🟥
+🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥`
+            },
+            {
+                id: 232,
+                title: "Colorful Heart Design",
+                category: "heart",
+                content: `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+⬛🟥🟥⬛⬛⬛🟥🟥⬛
+⬛🟥🟥⬛⬛⬛🟥🟥⬛
+⬛⬛⬛🟥🟥🟥⬛⬛⬛
+⬛⬛🟥🟥🟥🟥🟥⬛⬛
+⬛🟥⬛🟥🟥🟥⬛🟥⬛
+⬛🟥⬛🟥🟥🟥⬛🟥⬛
+⬛⬛⬛🟥🟥🟥⬛⬛⬛
+⬛⬛⬛⬛⬛⬛⬛⬛⬛`
+            },
+            {
+                id: 233,
+                title: "Beautiful Pattern",
+                category: "pattern",
+                content: `🟩🟩🟩🟩🟩🟩🟩🟩🟩
+🟩🟩🟩🟩🟩🟩🟩🟩🟩
+🟩🟩⬜⬜⬜⬜⬜🟩🟩
+🟩⬜🟩🟩🟩🟩⬜🟩🟩
+🟩⬜🟩🟩🟩⬜🟩🟩🟩
+🟩⬜🟩🟩⬜🟩🟩🟩🟩
+🟩⬜🟩🟩🟩⬜🟩🟩🟩
+🟩⬜🟩🟩🟩🟩⬜🟩🟩
+🟩🟩⬜⬜⬜⬜⬜🟩🟩
+🟩🟩🟩🟩🟩🟩🟩🟩🟩`
+            },
+            {
+                id: 234,
+                title: "Blue Heart Art",
+                category: "heart",
+                content: `🟦🟦🟦🟦🟦🟦🟦🟦🟦
+🟦🟦🟦🟦🟦🟦🟦🟦🟦
+🟦🟦⬜⬜⬜⬜⬜🟦🟦
+🟦⬜🟦🟦🟦🟦🟦⬜🟦
+🟦⬜🟦🟦🟦🟦🟦⬜🟦
+🟦⬜🟦🟦🟦🟦🟦⬜🟦
+🟦🟦⬜🟦🟦🟦⬜🟦🟦
+🟦🟦🟦⬜🟦⬜🟦🟦🟦
+🟦🟦🟦🟦⬜🟦🟦🟦🟦
+🟦🟦🟦🟦🟦🟦🟦🟦🟦`
+            },
+            {
+                id: 235,
+                title: "Couple with Hearts",
+                category: "love",
+                content: `✨️     ✨️
+  ✨️   ✨️   ✨️
+✨️     👧     ✨️
+  ✨️   ️💘   ✨️
+    ✨️   ✨️
+      ✨️
+
+      💍
+      🩷
+     ❤️‍🔥
+    💞
+   💝
+
+    ✨️     ✨️
+  ✨️   ✨️   ✨️
+✨️     👦     ✨️
+  ✨️   ?    ✨️
+    ✨️   ✨️
+      ✨️`
+            },
+            {
+                id: 236,
+                title: "Proposal Art",
+                category: "love",
+                content: `✨✨✨✨✨✨✨
+✨   👧   ✨
+✨   ️💕   ✨
+✨   👦   ✨
+✨✨✨✨✨✨✨
+
+✨ WILL YOU MARRY ME? ✨
+     💍 ️💖`
+            },
+            {
+                id: 237,
+                title: "Special Heart Art 1",
+                category: "heart",
+                content: `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+🟥🟥🟥⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜🟥🟥🟥
+🟥🟥⬜🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦⬜🟥🟥
+🟥⬜🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦⬜🟥
+🟥⬜🟦🟦⬛⬛🟦🟦🟦🟦🟦⬛⬛🟦🟦⬜🟥
+🟥⬜🟦🟦⬛⬛🟦🟦🟦🟦🟦⬛⬛🟦🟦⬜🟥
+🟥⬜🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦⬜🟥
+🟥⬜🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦⬜🟥
+🟥⬜🟦🟦⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛🟦🟦⬜🟥
+🟥⬜🟦🟦🟦🟦⬛⬛⬛⬛⬛🟦🟦🟦🟦⬜🟥
+🟥⬜🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦⬜🟥
+🟥🟥⬜🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦⬜🟥🟥
+🟥🟥🟥⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜🟥🟥🟥
+🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥`
+            },
+            {
+                id: 238,
+                title: "Romantic Couple Art",
+                category: "love",
+                content: `🌟   🌟
+   🌟     🌟
+  🌟       🌟
+ 🌟    👧    🌟
+🌟           🌟
+ 🌟         🌟
+  🌟       🌟
+   🌟     🌟
+    🌟   🌟
+     🌟 🌟
+      🌟
+
+      💍
+     🩷
+    💘
+   ❤️
+  💓
+ 💕
+🫂
+
+    🌟   🌟
+   🌟     🌟
+  🌟       🌟
+ 🌟    👦    🌟
+🌟    ?     🌟
+ 🌟         🌟
+  🌟       🌟
+   🌟     🌟
+    🌟   🌟
+     🌟 🌟
+      🌟`
+            },
+            {
+                id: 239,
+                title: "Advanced Heart Pattern",
+                category: "heart",
+                content: `⬛🟥🟥⬛🟥🟥⬛
+🟥🟥🟥🟥🟥🟥🟥
+🟥🟥🟥🟥🟥🟥🟥
+⬛🟥🟥🟥🟥🟥⬛
+⬛⬛🟥🟥🟥⬛⬛
+⬛⬛⬛🟥⬛⬛⬛`
+            },
+            {
+                id: 240,
+                title: "Special Design 1",
+                category: "design",
+                content: `⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⠶⢦⣤⠶⠶⣄⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣇⠀♥️⠀⢀⣿⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠙⢧⣄⠀⣠⠞⠁⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣀⡀⠀⠉⠛⠃⣠⣄⡀⠀⠀⠀
+⠀⠀⠀⠀⡞⠉⠙⢳⣄⢀⡾⠁⠈⣿⠀⠀⠀
+⠀⠀⠀⠀⢻⡄⠀⠀⠙⢿⡇⠀⢰⠇⠀⠀⠀
+⠀⠀⠀⠀⠀⠙⣦⡀⠀⠀⠹⣦⡟⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠈⢳⣄⠀⠀⠈⠻⣄⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⡞⠋⠛⢧⡀⠀⠀⠘⢷⡀⠀
+⠀⠀⠀⢠⡴⠾⣧⡀⠀⠀⠹⣦⠀⠀⠈⢿⡄
+⠀⠀⣀⣿⠀⠀⠈⠻⣄⠀⠀⠀⠀⠀⠀⠈⣷
+⢠⡟⠉⠛⢷⣄⠀⠀⠈⠀⠀⠀⠀⠀⠀⣰⠏
+⠀⢷⡀⠀⠀⠉⠃⠀⠀⠀⠀⠀⠀⠀⣴⠏⠀
+⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⢀⣠⠞⠁⠀⠀
+⠀⠀⠀⠈⠙⠶⣤⣤⣤⡤⠶⠋⠁⠀⠀⠀⠀`
+            },
+            {
+                id: 241,
+                title: "Special Design 2",
+                category: "design",
+                content: `⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠤⠖⠶⠶⠶⠶⠦⠤⠠⣿⣿⡓⠶⠶⢶⣶⣶⣦⣤⣤⣤⣤⣀⣀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣄⣀⠤⠒⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠓⢢⣸⠛⠻⣯⣿⠏⠉⠛⢻
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⠠⣿⣋⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⡿⠀⠀⠀⠙⣷⣄⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⢴⣶⠚⠉⠉⠀⠀⠀⠀⠀⠀⠀⠉⠉⠁⠐⠒⠒⠠⠤⠤⠀⣀⣀⣀⠀⠀⠀⠀⠀⣸⡇⢠⠖⠒⠲⣾⠈⠳⡄
+⠀⠀⠀⠀⠀⡠⠖⠙⠛⠒⠿⣋⡉⢢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⣐⠶⠋⠳⣧⠒⠒⠚⠉⡆⠀⢹
+⠀⠀⢀⡴⠋⠑⡶⠀⠀⠀⠀⠀⠀⠈⠀⠀⠐⠛⠯⠭⣉⣉⡩⠗⣂⡠⠔⠒⠒⣢⠤⢀⣀⠤⠄⠒⠈⠉⠀⠀⠀⠀⢰⠀⠀⠀⠀⡇⣸⣿
+⣠⣴⡟⠀⣠⠞⠒⠤⠄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠐⠒⢊⡡⠔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⢠⣧⣿⣿
+⣯⡀⠑⠒⠁⠀⠀⠀⠀⠀⠈⠉⠐⠒⠤⠄⣀⠴⠂⠀⠀⠀⠐⠒⠢⠤⡂⠁⠀⠀⠀⠀⠀⠀⠀⣠⣶⣖⣄⠀⠀⠀⢸⠀⠀⢀⣼⣿⣿⡿
+⢾⣿⡦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠄⠀⠀⠀⣀⣀⣤⣾⣿⡏⢻⡜⡀⠀⣠⣼⣤⠞⣋⠥⢿⡿⠁
+⢸⣿⡇⠀⠸⡷⢶⣤⢄⣀⡀⠀⠀⠀⠈⠒⠂⠤⠤⣄⣀⣀⣀⣀⣠⣤⣮⣤⣤⣾⢿⣿⣿⣿⡟⣇⣿⣾⢷⣧⣾⠟⢋⠔⠋⠈⠉⠁⠀⠀
+⡿⣜⣇⣀⡤⠗⠤⢄⡉⠛⠛⠛⠻⢶⡒⠠⠤⢤⣄⢀⣹⣍⣉⣉⣉⣁⣀⠤⠔⠛⢹⣯⣽⣿⢛⣿⣿⣼⢈⠋⡠⠊⠁⠀⠀⠀⠀⠀⠀⠀
+⠑⢌⣻⢄⡀⠀⣠⣶⣿⣽⣖⡢⠄⣀⢱⠀⠀⢾⠉⣷⠀⠀⣳⠤⠤⢿⠀⠀⠀⣴⠟⢉⣿⠈⡍⣍⢋⡿⠼⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠉⠓⠯⣕⠻⢷⣿⡿⠊⠁⠀⠀⢩⠃⠀⡤⠿⢿⣶⣾⣯⣏⣩⣿⠀⠀⢸⣿⡶⢾⢹⢼⡿⢃⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠉⠒⠠⢍⣑⠒⠠⠴⠯⣤⣴⣚⣒⣒⣒⣒⣶⣿⣿⡧⠐⠊⠁⠀⠀⢸⣀⣾⣷⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠑⠒⠤⠤⢀⣀⣀⣀⣀⣉⣉⣩⣽⣞⠠⠤⠤⠒⢊⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`
+            },
+            {
+                id: 242,
+                title: "Special Design 3",
+                category: "design",
+                content: `▬▬▬.◙.▬▬▬
+═▂▄▄▓▄▄▂
+◢◤ █▀▀████▄▄▄◢◤
+█▄ █ █▄ ███▀▀▀▀▀▀╬
+◥█████◤
+══╩══╩═
+╬═╬
+╬═╬
+╬═╬    Just dropped down to say
+╬═╬    *add text here*
+╬═╬   
+╬═╬☻/
+╬═╬/▌
+╬═╬/  \\
+.`
+            },
+            {
+                id: 243,
+                title: "Special Design 4",
+                category: "design",
+                content: `░░░░░░░░░░░░░░░░░░░░░▄▀░░▌
+░░░░░░░░░░░░░░░░░░░▄▀▐░░░▌
+░░░░░░░░░░░░░░░░▄▀▀▒▐▒░░░▌
+░░░░░▄▀▀▄░░░▄▄▀▀▒▒▒▒▌▒▒░░▌
+░░░░▐▒░░░▀▄▀▒▒▒▒▒▒▒▒▒▒▒▒▒█
+░░░░▌▒░░░░▒▀▄▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄
+░░░░▐▒░░░░░▒▒▒▒▒▒▒▒▒▌▒▐▒▒▒▒▒▀▄
+░░░░▌▀▄░░▒▒▒▒▒▒▒▒▐▒▒▒▌▒▌▒▄▄▒▒▐
+░░░▌▌▒▒▀▒▒▒▒▒▒▒▒▒▒▐▒▒▒▒▒█▄█▌▒▒▌
+░▄▀▒▐▒▒▒▒▒▒▒▒▒▒▒▄▀█▌▒▒▒▒▒▀▀▒▒▐░░░▄
+▀▒▒▒▒▌▒▒▒▒▒▒▒▄▒▐███▌▄▒▒▒▒▒▒▒▄▀▀▀▀
+▒▒▒▒▒▐▒▒▒▒▒▄▀▒▒▒▀▀▀▒▒▒▒▄█▀░░▒▌▀▀▄▄
+▒▒▒▒▒▒█▒▄▄▀▒▒▒▒▒▒▒▒▒▒▒░░▐▒▀▄▀▄░░░░▀
+▒▒▒▒▒▒▒█▒▒▒▒▒▒▒▒▒▄▒▒▒▒▄▀▒▒▒▌░░▀▄
+▒▒▒▒▒▒▒▒▀▄▒▒▒▒▒▒▒▒▀▀▀▀▒▒▒▄▀`
+            },
+            {
+                id: 244,
+                title: "Special Design 5",
+                category: "design",
+                content: `_________1¶¶¶¶¶¶
+________§¶¶¶¶¶¶¶¶§
+_______1¶¶¶¶¶¶¶¶¶¶1
+_______¶¶¶¶¶¶¶¶¶¶§
+______1¶¶¶¶¶¶¶¶¶§
+______§¶¶¶¶¶¶¶¶¶
+______§¶¶¶¶¶¶¶¶
+______¶¶¶¶¶¶¶¶§
+______¶¶¶¶¶¶¶¶
+______¶¶¶¶¶¶¶¶1
+_______¶¶¶¶¶¶¶¶¶
+_______§¶¶¶¶¶¶¶¶§
+________¶¶¶¶¶¶¶¶¶__________________§¶¶¶¶¶§
+________1¶¶¶¶¶¶¶¶_____11__________§¶¶¶¶¶¶¶1
+_________¶¶¶¶¶¶¶¶___1¶¶¶1________¶¶¶¶¶¶¶¶¶1
+_________§¶¶¶¶¶¶¶___¶¶§§¶¶¶§1§___¶¶¶¶¶¶¶¶§
+_________¶¶¶¶¶¶¶¶___§§§¶¶¶¶¶1¶1__¶¶¶¶¶¶¶1
+________¶¶¶¶¶¶¶¶¶____§fbart.org§_____§¶¶¶¶¶
+________¶¶¶¶¶¶¶¶¶1____1¶¶¶¶§_1_____§¶¶¶¶¶¶§
+_______1¶¶¶¶¶¶¶¶¶1____§§__1_______¶¶¶¶¶¶¶¶¶¶1
+_______¶¶¶¶¶¶¶¶¶¶1___§¶¶§________11§§§¶¶¶¶¶¶¶1
+_______¶¶¶¶¶¶¶¶¶¶1___¶¶¶¶¶¶1____1§1§§§¶¶¶¶¶¶¶§
+_______¶¶¶¶¶¶¶¶¶¶1___§¶¶¶¶¶¶§1_1§11§§§¶¶¶¶¶¶¶§
+_______¶¶¶¶¶¶¶¶¶¶1____§¶¶§§¶¶¶¶¶§1§§§¶¶¶¶¶¶¶¶
+_______¶¶¶¶¶¶¶¶¶¶1_____§¶¶§§§¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶
+_______¶¶¶¶¶¶¶¶¶¶1_______§¶¶§§¶¶¶¶¶¶¶¶¶¶¶¶¶¶
+_______¶¶¶¶¶¶¶¶¶¶1_________1§§1_1¶¶¶¶¶¶¶¶¶¶¶
+_______¶¶¶¶¶¶¶¶¶¶§_______________§§¶¶¶¶¶¶¶¶¶
+_______¶¶¶¶¶¶¶¶¶¶¶_______________§¶¶¶¶¶¶¶¶¶1
+_______1§¶¶¶¶¶¶¶§________________1¶¶¶¶¶¶¶¶¶¶
+_________§¶¶¶¶¶___________________¶¶¶¶¶¶¶¶¶¶
+_________¶¶¶¶¶_______11§§¶¶¶¶¶¶§§¶¶¶¶¶¶¶¶¶¶1
+_________¶¶¶¶¶______¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶
+________§¶¶¶¶1_____1¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶
+________¶¶¶¶¶_______¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶
+________¶¶¶¶¶________¶¶¶¶¶¶_____111§¶¶¶¶¶¶¶¶¶1
+________¶¶¶¶¶________§¶¶¶¶¶§________¶¶¶¶¶¶¶¶§
+________§¶¶¶¶_________¶¶¶¶¶¶§_______1¶¶¶¶¶¶¶1
+________1¶¶¶§_________1¶¶¶¶¶¶§_______¶¶¶¶¶¶¶1
+_________¶¶¶§__________¶¶¶¶¶¶¶1______1¶¶¶¶¶¶1
+_________¶¶¶§___________¶¶¶¶¶¶¶1______¶¶¶¶¶¶
+_________¶¶¶¶___________§¶¶¶¶¶¶¶§_____¶¶¶¶¶¶
+________¶¶¶¶¶¶___________§¶¶¶¶¶¶¶§____¶¶¶¶¶¶
+________¶¶¶¶¶¶¶1___________¶¶¶¶¶§_____1¶¶¶¶¶¶¶¶¶¶¶¶
+________¶¶_§¶¶¶¶¶¶_______§¶¶1__________¶¶¶¶¶¶¶¶¶¶¶¶`
+            },
+            {
+                id: 245,
+                title: "Special Love Message",
+                category: "love",
+                content: `────(♥)(♥)(♥)────(♥)(♥)(♥) __ ɪƒ ƴσυ'ʀє αʟσηє,
+──(♥)██████(♥)(♥)██████(♥) ɪ'ʟʟ ɓє ƴσυʀ ѕɧα∂σѡ.
+─(♥)████████(♥)████████(♥) ɪƒ ƴσυ ѡαηт тσ cʀƴ,
+─(♥)██████████████████(♥) ɪ'ʟʟ ɓє ƴσυʀ ѕɧσυʟ∂єʀ.
+──(♥)████████████████(♥) ɪƒ ƴσυ ѡαηт α ɧυɢ,
+────(♥)████████████(♥) __ ɪ'ʟʟ ɓє ƴσυʀ ρɪʟʟσѡ.
+──────(♥)████████(♥) ɪƒ ƴσυ ηєє∂ тσ ɓє ɧαρρƴ,
+────────(♥)████(♥) __ ɪ'ʟʟ ɓє ƴσυʀ ѕɱɪʟє.
+─────────(♥)██(♥) ɓυт αηƴтɪɱє ƴσυ ηєє∂ α ƒʀɪєη∂,
+───────────(♥) __ ɪ'ʟʟ ʝυѕт ɓє ɱє.`
+            },
+            {
+                id: 246,
+                title: "Special Love Message 2",
+                category: "love",
+                content: `────(♥)(♥)(♥)────(♥)(♥)(♥) __ ɪƒ ƴσυ'ʀє αʟσηє,
+──(♥)██████(♥)(♥)██████(♥) ɪ'ʟʟ ɓє ƴσυʀ ѕɧα∂σѡ.
+─(♥)████████(♥)████████(♥) ɪƒ ƴσυ ѡαηт тσ cʀƴ,
+─(♥)██████████████████(♥) ɪ'ʟʟ ɓє ƴσυʀ ѕɧσυʟ∂єʀ.
+──(♥)████████████████(♥) ɪƒ ƴσυ ѡαηт α ɧυɢ,
+────(♥)████████████(♥) __ ɪ'ʟʟ ɓє ƴσυʀ ρɪʟʟσѡ.
+──────(♥)████████(♥) ɪƒ ƴσυ ηєє∂ тσ ɓє ɧαρρƴ,
+────────(♥)████(♥) __ ɪ'ʟʟ ɓє ƴσυʀ ѕɱɪʟє.
+─────────(♥)██(♥) ɓυт αηƴтɪɱє ƴσυ ηєє∂ α ƒʀɪєη∂,
+───────────(♥) __ ɪ'ʟʟ ʝυѕт ɓє ɱє.`
+            },
+            {
+                id: 247,
+                title: "Wave Design",
+                category: "design",
+                content: `─────────▀▀▀▀▀▀──────────▀▀▀▀▀▀▀
+──────▀▀▀▀▀▀▀▀▀▀▀▀▀───▀▀▀▀▀▀▀▀▀▀▀▀▀
+────▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀──────────▀▀▀
+───▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀──────────────▀▀
+──▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀──────────────▀▀
+─▀▀▀▀▀▀▀▀▀▀▀▀───▀▀▀▀▀▀▀───────────────▀▀
+─▀▀▀▀▀▀▀▀▀▀▀─────▀▀▀▀▀▀▀──────────────▀▀
+─▀▀▀▀▀▀▀▀▀▀▀▀───▀▀▀▀▀▀▀▀──────────────▀▀
+─▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀───────────────▀▀
+─▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀───────────────▀▀
+─▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀───────────────▀▀
+──▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀───────────────▀▀
+───▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀───────────────▀▀▀
+─────▀▀▀▀▀▀▀▀▀▀▀▀▀───────────────▀▀▀
+──────▀▀▀▀▀▀▀▀▀▀▀───▀▀▀────────▀▀▀
+────────▀▀▀▀▀▀▀▀▀──▀▀▀▀▀────▀▀▀▀
+───────────▀▀▀▀▀▀───▀▀▀───▀▀▀▀
+─────────────▀▀▀▀▀─────▀▀▀▀
+────────────────▀▀▀──▀▀▀▀
+──────────────────▀▀▀▀
+───────────────────▀▀`
+            },
+            {
+                id: 248,
+                title: "Flower Garden",
+                category: "special",
+                content: `             . . .                         
+              \\|/                          
+            \`–+–\`                        
+              /|\\                          
+             \` | \`                         
+               |                           
+               |                           
+           ,–'#\`–.                       
+           |#######|                       
+        _.-'#######\`-._                    
+     ,-'###############\`-.                 
+   ,'#####################\`,               
+  /#########################\\              
+ |###########################|             
+|#############################|            
+|#############################|            
+|#############################|            
+|#############################|            
+ |###########################|             
+  \\#########################/              
+   \`.#####################,'               
+     \`._###############_,'                 
+        \`–..#####..–'`
+            },
+            {
+                id: 249,
+                title: "Special Art 1",
+                category: "special",
+                content: `⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣼⣿⣿⣿⣿⣿⣿⣿⣿⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣶⣦⣄⢀⣼⣿⣿⣿⣿⣿⣿⠿⠛⠋⠉⠁⠀⠀⠉⠉⠛⠻⢿⣿⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣤⣤⣤⣤⣤⣶⣿⣿⣿⡿⠛⢻⣾⣿⣿⣿⣿⠟⢋⣤⠾⠛⠛⠛⠛⠓⠄⠀⠀⠀⠀⠀⢉⡛⠿⣷⣶⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⡟⠁⠀⢀⣾⣿⣿⣿⠟⠁⠀⠉⣀⣤⣤⠀⢀⣤⣶⣿⣿⣿⣿⣷⣦⡀⠈⠙⠲⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⠏⠀⡀⠀⣸⣿⣿⣿⠋⠀⣠⣶⣿⣿⠟⠁⣴⣿⣿⣿⠟⣉⣤⣤⣤⡉⠛⠆⠀⠀⠀⠙⢿⣿⣷⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⡟⠀⣼⠇⢀⣿⣿⣿⡇⠀⢰⣿⣿⣿⠃⠀⢰⣿⣿⣿⣡⣾⣿⡿⠿⣿⣿⡆⠀⠀⢰⡄⠀⠀⠙⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⡇⢰⣿⠀⢸⣿⣿⣿⣇⠀⠀⢻⣿⠃⠀⠀⣿⣿⣿⣿⣿⣿⣿⣀⣀⣼⣿⠇⠀⣧⠀⣿⡄⠀⠀⠈⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⡇⢸⣿⠀⢸⣿⣿⣿⣿⣆⢠⡀⠹⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣷⣮⣭⣥⣤⣾⡇⣸⣿⣿⠀⠀⠀⢸⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠻⣿⣿⣿⡇⠘⣿⡄⠘⣿⣿⣿⣿⣿⣧⡙⣷⣦⣄⡀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣫⣾⣿⣿⣿⠀⢸⠀⢸⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⠀⠀⠻⣿⣿⣷⡀⠹⣇⠀⢻⣿⣿⣿⣿⣿⣿⣦⡛⢿⣿⣿⣶⣦⣭⣭⣍⣉⣉⣭⣭⣶⣿⣿⣿⣿⣿⠃⢀⣿⠀⣾⣿⣿⣿⢁⣀⣀⡀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠁⠀⠀⢀⠹⣿⣿⣷⡄⠈⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣦⣍⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⣠⣿⢏⣾⣿⣿⣿⠏⠙⣿⣿⣿⣦⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⠀⠀⠀⣾⣆⠘⢿⣿⣿⣦⣀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣙⠻⢿⣿⣿⣿⣿⣿⡿⠿⠋⠁⠠⠞⣫⣵⣿⣿⣿⠟⠁⣠⠇⢸⣿⣿⣿⡇⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⠀⠀⢠⣿⣿⣄⠀⠹⣿⣿⣿⣷⣄⡉⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣭⣉⠉⢉⣀⣀⣀⣤⣴⣶⣿⣿⡿⠿⠋⠁⣠⣾⡿⠀⣸⣿⣿⣿⣷⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣯⠀⠀⣾⣿⣿⣿⣦⡀⠈⠻⢿⣿⣿⣿⣷⣦⣌⡉⠛⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣭⣉⡉⠉⠉⠉⠉⠀⢀⣀⣴⣾⣿⡿⠁⣰⣿⣿⣿⣿⣿⣿⣦⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⣿⣿⣿⣿⣿⣿⣦⡀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣶⣤⣤⣈⣉⠙⠛⠛⠛⠛⠛⠛⢛⣛⣉⣥⣤⣶⣾⣿⣿⣿⣿⠟⠏⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣷
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡄⠀⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⣡⣴⣿⣿⣿⠿⠛⠛⠉⠉⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣷⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⡄⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⢋⣥⣴⡿⠟⣻⠏⠁⠀⠀⠀⢰⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⡄⠀⠀⠘⣿⣿⣧⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⡀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠋⠁⠀⠀⣀⣠⣤⣶⣿⠋⠀⠀⠀⠀⢀⡞⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢷⡀⠀⠀⠹⣿⣿⣧⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⢁⣀⣤⣴⣶⣾⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⣾⠁⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠸⣷⡀⠀⠀⠹⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠹⣿⣿⣿⣿⣿⡿⢋⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⢀⣾⠃⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠹⣿⣦⡀⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⢿⣿⣿⣿⢋⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⣰⣿⠋⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣷⣦⣌⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⢸⣿⡿⣵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠁⠀⠀⠀⣠⣾⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢨⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⣀⣴⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⠀⠀⠀⠀⠀⠈⠛⠿⣿⣿⣿⣿⡿⣿⣿⣿⣿⣽⣿⠿⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⢀⣠⣴⣾⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣼⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠉⠈⢹⣿⣿⣿⣿⣿⣿⣮⣭⣛⣛⣹⠿⠿⠿⠿⠿⠿⠿⠟⣛⣋⣡⣤⣶⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣾⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢸⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⡿⣿⣛⣭⣭⣽⣿⣛⣛⠛⠛⠛⠛⠋⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢸⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⠟⠁⠀⠀⠉⠛⢿⣿⣿⣿⣿⣿⣶⣤⣄⣀⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣼⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⣄⠀⠀⠀⠀⠀⢸⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⣤⣀⣤⣴⣶⣶⣶⣶⣿⣷⣶⣶⣶⣶⣤⣤⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⠘⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣯⡻⣿⣿⣿⣇⠀⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣻⣿⣿⣿⣿⣿⣿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣮⡻⣿⣿⣸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣴⣿⣿⣿⣿⣿⣿⣟⣿⣾⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⡜⣿⢹⣿⣿⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⢟⣫⣾⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⡍⢸⣿⣿⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⢟⣵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠛⠛⠛⠉⣧⢸⣿⣿⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⠟⣵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⡇⠀⠀⠀⠀⢸⣿⣿⡿⣡⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⡇⠀⠀⠀⠀⢸⣿⠟⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⠀⠀⠀⠀⠸⢋⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⡭⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⠟⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣷⠀⠀⢀⣿⠏⠉⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⣾⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⣼⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⠿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`
+            },
+            {
+                id: 250,
+                title: "Special Art 2",
+                category: "special",
+                content: `⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⠶⢦⣤⠶⠶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣇⠀⠀⠁⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢧⣄⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠉⠛⠃⣠⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⠉⠙⢳⣄⢀⡾⠁⠈⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠀⠀⠙⢿⡇⠀⢰⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣦⡀⠀⠀⠹⣦⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⣄⠀⠀⠈⠻⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⠋⠛⢧⡀⠀⠀⠘⢷⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡴⠾⣧⡀⠀⠀⠹⣦⠀⠀⠈⢿⡄⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⠀⠀⠈⠻⣄⠀⠀⠀⠀⠀⠀⠈⣷⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢠⡟⠉⠛⢷⣄⠀⠀⠈⠀⠀⠀⠀⠀⠀⣰⠏⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢷⡀⠀⠀⠉⠃⠀⠀⠀⠀⠀⠀⠀⣴⠏⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⢀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠶⣤⣤⣤⡤⠶⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⢀⣼⣷⣤⣤⣤⣤⣤⣤⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣶⡄⠀
+⠀⠀⢺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣶⣶⣶⣶⣶⣶⣶⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷
+⠀⠀⠀⣿⣿⣿⣿⣿⡼⣿⣿⣿⣿⣷⣿⣿⠋⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠉⠙⠿⣿⣿⣿⣿⣿⣿⣿⡟⠛
+⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣝⣿⣽⣿⣿⣿⠿⣏⣉⡍⠉⠉⠉⠉⠙⠛⠻⠿⠿⠿⠿⣿⣿⣿⡇⠀
+⠘⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⣩⣿⣿⣿⣿⣿⣦⣈⣻⣃⣠⠶⠒⠒⠒⠒⠒⠛⠛⠛⠛⠛⠋⠉⠁⠀
+⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿⣿⡿⣾⠋⠀⠀⣿⠃⠀⠀⠈⢳⡼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣷⣿⣄⠀⠀⠹⣆⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠓⠶⢤⣬⣧⣤⠶⠿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⣿⣿⣿⣿⣿⣿⣿⣿⡿⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠘⠛⠛⠛⣿⣿⣿⣿⠣⢾⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`
+            },
+            // Add more special arts here...
+            
+            // More arts from your collection...
+            {
+                id: 251,
+                title: "Special Heart Art",
+                category: "heart",
+                content: `🟥🟥❤️🟥🟥
+  🟥🟥❤️❤️❤️🟥🟥
+🟥🟥❤️❤️❤️❤️❤️🟥🟥
+  🟥🟥❤️❤️❤️🟥🟥
+    🟥🟥❤️🟥🟥
+      🟥🟥🟥
+        💝
+        👧`
+            },
+            {
+                id: 252,
+                title: "Love Couple Art",
+                category: "love",
+                content: `✨️     ✨️
+  ✨️   ✨️   ✨️
+✨️     👧     ✨️
+  ✨️   ️💘   ✨️
+    ✨️   ✨️
+      ✨️
+
+      💍
+      🩷
+     ❤️‍🔥
+    💞
+   💝
+
+    ✨️     ✨️
+  ✨️   ✨️   ✨️
+✨️     👦     ✨️
+  ✨️   ?    ✨️
+    ✨️   ✨️
+      ✨️`
+            },
+
+            // ========== NEW HEART ARTS ==========
+            {
+                id: 253,
+                title: "3D Box Heart",
+                category: "heart",
+                content: `╔══╗ ╔══╗
+║╔╗║ ║╔╗║
+║╚╝╚═╝╚╝║
+╚╗╔═══╗╔╝
+ ║║   ║║
+ ╚╝   ╚╝`
+            },
+            {
+                id: 254,
+                title: "Neon Heart",
+                category: "heart",
+                content: `·:*¨༺❤༻¨*:·
+·:*¨༺💖༻¨*:·
+·:*¨༺💕༻¨*:·`
+            },
+            {
+                id: 255,
+                title: "ASCII Heart Large",
+                category: "heart",
+                content: `  ***   ***
+ ***** *****
+***********
+ *********
+  *******
+   *****
+    ***
+     *`
+            },
+            {
+                id: 256,
+                title: "Heart with Name",
+                category: "heart",
+                content: `┌──────────────┐
+│  ♥ My Love ♥  │
+│               │
+│   ♡ ♥ ♡     │
+└──────────────┘`
+            },
+            {
+                id: 257,
+                title: "Glitter Heart",
+                category: "heart",
+                content: `✨💖✨💖✨💖✨
+💖✨💖✨💖✨💖
+✨💖✨💖✨💖✨
+💖✨💖✨💖✨💖
+✨💖✨💖✨💖✨`
+            },
+            {
+                id: 258,
+                title: "Heart Galaxy",
+                category: "heart",
+                content: `⭐❤️⭐❤️⭐
+❤️⭐❤️⭐❤️
+⭐❤️💫❤️⭐
+❤️⭐❤️⭐❤️
+⭐❤️⭐❤️⭐`
+            },
+            {
+                id: 259,
+                title: "Double Pyramid Heart",
+                category: "heart",
+                content: `❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️❤️❤️
+❤️❤️❤️❤️❤️
+❤️❤️❤️
+❤️`
+            },
+            {
+                id: 260,
+                title: "Rainbow Heart",
+                category: "heart",
+                content: `❤️🧡💛💚💙💜
+🧡💛💚💙💜❤️
+💛💚💙💜❤️🧡
+💚💙💜❤️🧡💛`
+            },
+            {
+                id: 261,
+                title: "Heart Emoji Art",
+                category: "heart",
+                content: `🫀❤️‍🔥🫀
+❤️‍🔥❤️❤️‍🔥
+🫀❤️‍🔥🫀`
+            },
+            {
+                id: 262,
+                title: "Fancy Heart Border",
+                category: "heart",
+                content: `♥═══════════════♥
+║                 ║
+║   ❤️ LOVE ❤️   ║
+║                 ║
+♥═══════════════♥`
+            },
+
+            // ========== NEW LOVE ARTS ==========
+            {
+                id: 263,
+                title: "Love Poem Box",
+                category: "love",
+                content: `╭────────────────────╮
+│  Roses are red 🌹  │
+│  Violets are blue  │
+│  💖 I love you 💖 │
+╰────────────────────╯`
+            },
+            {
+                id: 264,
+                title: "Wedding Bells",
+                category: "love",
+                content: `🔔   💒   🔔
+  💍       💍
+    👰   🤵
+      💑
+    ❤️💕❤️`
+            },
+            {
+                id: 265,
+                title: "Love Maze",
+                category: "love",
+                content: `❤→→→→→→→→❤
+↑ ←←←←←← ↓
+↑ ↑      ↓ ↓
+↑ ↑  💕  ↓ ↓
+↑ →→→→→→ ↓ ↓
+↑         ↓ ↓
+❤←←←←←←←←❤`
+            },
+            {
+                id: 266,
+                title: "Starry Love",
+                category: "love",
+                content: `★彡 LOVE 彡★
+彡★ YOU  ★彡
+★彡 ALWAYS彡★
+彡★ & ★彡
+★彡 FOREVER彡★`
+            },
+            {
+                id: 267,
+                title: "Love Ladder",
+                category: "love",
+                content: `💕─────────💕
+ 💖─────💖
+  💗───💗
+   💘─💘
+    💝💝
+     💞`
+            },
+            {
+                id: 268,
+                title: "Couple Emoji Story",
+                category: "love",
+                content: `👩→🌹→👨 = 💕
+👩+👨 = 💑
+💑+💒 = 👨‍👩‍👧‍👦
+👨‍👩‍👧‍👦 = 🏠+❤️`
+            },
+            {
+                id: 269,
+                title: "Love Quote Frame",
+                category: "love",
+                content: `┌*───────────────*┐
+* "Where there is  *
+*  love there is   *
+*   life" - ❤️    *
+└*───────────────*┘`
+            },
+            {
+                id: 270,
+                title: "Love Orbit",
+                category: "love",
+                content: `    ✦  💕  ✦
+  ✦          ✦
+💕    💞     💕
+  ✦          ✦
+    ✦  💕  ✦`
+            },
+
+            // ========== NEW ANIMAL ARTS ==========
+            {
+                id: 271,
+                title: "Cute Puppy",
+                category: "animal",
+                content: `  / \\__
+ (    @\\___
+ /         O
+/   (_____/
+/_____/   U 🐾`
+            },
+            {
+                id: 272,
+                title: "Rooster",
+                category: "animal",
+                content: `   _
+  /|\\
+ ( 0)>
+  ||
+ _||_`
+            },
+            {
+                id: 273,
+                title: "Parrot",
+                category: "animal",
+                content: `   /\\
+  (oo)
+ =( )=
+   \/
+ ~ ~~`
+            },
+            {
+                id: 274,
+                title: "Crab",
+                category: "animal",
+                content: `\\ (•◡•) /
+ \\     /
+  |---|
+  | • |
+  |---|`
+            },
+            {
+                id: 275,
+                title: "Shrimp",
+                category: "animal",
+                content: `   ___
+  /   )
+  \\___)
+  /  )
+ (   )
+  \___)`
+            },
+            {
+                id: 276,
+                title: "Panda Bear",
+                category: "animal",
+                content: `( ●  ● )
+(   ▼   )
+(  ___  )
+ (     )
+  (   )
+   ---`
+            },
+            {
+                id: 277,
+                title: "Koala",
+                category: "animal",
+                content: `  (◕ᴥ◕)
+  /|   |\\
+ / |   | \\
+   |___|`
+            },
+            {
+                id: 278,
+                title: "Raccoon",
+                category: "animal",
+                content: `  /\\_/\\
+ ( o o )
+  =( )=
+  /    \\
+ (      )`
+            },
+            {
+                id: 279,
+                title: "Hedgehog",
+                category: "animal",
+                content: `   \\|/|/
+  /\\/\\/\\
+ ( •ω• )
+  \\___/`
+            },
+            {
+                id: 280,
+                title: "Peacock",
+                category: "animal",
+                content: `🦚 🦚 🦚
+ \\ | /
+  (o)
+  /|\\
+ / | \\`
+            },
+            {
+                id: 281,
+                title: "Flamingo",
+                category: "animal",
+                content: `  🦩
+  /|
+ / |
+/  |
+|  /
+| /
+|/`
+            },
+            {
+                id: 282,
+                title: "Whale",
+                category: "animal",
+                content: `  .---.
+ /  o  \\
+|       |
+ \\ ___ /
+  ~~~~~`
+            },
+            {
+                id: 283,
+                title: "Shark",
+                category: "animal",
+                content: `    /\\
+   /  \\
+  / oo \\
+ /  __  \\
+/__|  |__\\
+   ||||`
+            },
+            {
+                id: 284,
+                title: "Dragonfly",
+                category: "animal",
+                content: `\\   |   /
+ \\  |  /
+  \\ | /
+   (o)
+  / | \\
+ /  |  \\`
+            },
+            {
+                id: 285,
+                title: "Gorilla",
+                category: "animal",
+                content: `  /\\  /\\
+ (    )( )
+  \\--/\\-/
+  |    |
+ /|    |\\
+/ |    | \\`
+            },
+            {
+                id: 286,
+                title: "Giraffe",
+                category: "animal",
+                content: `  O
+  |
+  |
+ /|
+/ |
+  |
+ /|\\`
+            },
+            {
+                id: 287,
+                title: "Hippo",
+                category: "animal",
+                content: `   ___
+  /. .\\
+ ( oo )
+  \\_U_/
+  /   \\
+ (     )`
+            },
+            {
+                id: 288,
+                title: "Crocodile",
+                category: "animal",
+                content: `   ___________
+  /           \\
+ / o     o    \\
+|_______________|
+  V V V V V V V`
+            },
+            {
+                id: 289,
+                title: "Cheetah",
+                category: "animal",
+                content: `  /\\_/\\
+ ( . . )
+  > o <
+ / . . \\
+/  . .  \\`
+            },
+            {
+                id: 290,
+                title: "Porcupine",
+                category: "animal",
+                content: `  |||||||
+ ( •_• )
+  |||||||||
+   /   \\
+  /     \\`
+            },
+
+            // ========== NEW PATTERN ARTS ==========
+            {
+                id: 291,
+                title: "Diamond Grid",
+                category: "pattern",
+                content: `◇◆◇◆◇◆◇
+◆◇◆◇◆◇◆
+◇◆◇◆◇◆◇
+◆◇◆◇◆◇◆
+◇◆◇◆◇◆◇`
+            },
+            {
+                id: 292,
+                title: "Star Pattern",
+                category: "pattern",
+                content: `★☆★☆★☆★
+☆★☆★☆★☆
+★☆★☆★☆★
+☆★☆★☆★☆
+★☆★☆★☆★`
+            },
+            {
+                id: 293,
+                title: "Zigzag Border",
+                category: "pattern",
+                content: `/\/\/\/\/\/\/\
+\/\/\/\/\/\/\/
+/\/\/\/\/\/\/\
+\/\/\/\/\/\/\/`
+            },
+            {
+                id: 294,
+                title: "Circle Pattern",
+                category: "pattern",
+                content: `○●○●○●○
+●○●○●○●
+○●○●○●○
+●○●○●○●
+○●○●○●○`
+            },
+            {
+                id: 295,
+                title: "Cross Pattern",
+                category: "pattern",
+                content: `✚✖✚✖✚✖✚
+✖✚✖✚✖✚✖
+✚✖✚✖✚✖✚
+✖✚✖✚✖✚✖
+✚✖✚✖✚✖✚`
+            },
+            {
+                id: 296,
+                title: "Flower Pattern",
+                category: "pattern",
+                content: `❀✿❀✿❀✿❀
+✿❀✿❀✿❀✿
+❀✿❀✿❀✿❀
+✿❀✿❀✿❀✿
+❀✿❀✿❀✿❀`
+            },
+            {
+                id: 297,
+                title: "Pixel Art Smile",
+                category: "pattern",
+                content: `░░████░░
+░█░░░░█░
+█░█░░█░█
+█░░░░░░█
+█░█░░█░█
+█░░████░█
+░█░░░░█░
+░░████░░`
+            },
+            {
+                id: 298,
+                title: "Brick Wall",
+                category: "pattern",
+                content: `█████████████
+░░░░░░░░░░░░░
+████████████
+░░░░░░░░░░░░
+█████████████`
+            },
+            {
+                id: 299,
+                title: "Mosaic",
+                category: "pattern",
+                content: `▓░▓░▓░▓░▓
+░▓░▓░▓░▓░
+▓░▓░▓░▓░▓
+░▓░▓░▓░▓░
+▓░▓░▓░▓░▓`
+            },
+            {
+                id: 300,
+                title: "Honeycomb",
+                category: "pattern",
+                content: `⬡⬡⬡⬡⬡⬡
+ ⬡⬡⬡⬡⬡
+⬡⬡⬡⬡⬡⬡
+ ⬡⬡⬡⬡⬡
+⬡⬡⬡⬡⬡⬡`
+            },
+            {
+                id: 301,
+                title: "Staircase Pattern",
+                category: "pattern",
+                content: `█
+██
+███
+████
+█████
+████
+███
+██
+█`
+            },
+            {
+                id: 302,
+                title: "Arrow Pattern",
+                category: "pattern",
+                content: `> > > > > >
+>> >> >> >
+>>> >>> >>
+>>>> >>>> >
+>>>>> >>>>>
+>>>> >>>> >
+>>> >>> >>
+>> >> >> >
+> > > > > >`
+            },
+            {
+                id: 303,
+                title: "Snowflake Pattern",
+                category: "pattern",
+                content: `❄️✨❄️✨❄️
+✨❄️✨❄️✨
+❄️✨❄️✨❄️
+✨❄️✨❄️✨
+❄️✨❄️✨❄️`
+            },
+
+            // ========== NEW SPECIAL ARTS ==========
+            {
+                id: 304,
+                title: "Space Rocket",
+                category: "special",
+                content: `    /\\
+   /  \\
+  | 🚀 |
+  |    |
+  /|  |\\
+ / |  | \\
+/__|__|__\\
+   |  |
+   |  |
+  /    \\`
+            },
+            {
+                id: 305,
+                title: "Solar System",
+                category: "special",
+                content: `☀️  🌍  🌙
+   🪐    ⭐
+🔴  🌕   ✨
+   💫  🌟
+⭐   ☀️   🌍`
+            },
+            {
+                id: 306,
+                title: "Castle",
+                category: "special",
+                content: `||| ||| |||
+|_| |_| |_|
+ _________
+|         |
+|  🏰     |
+|         |
+|_________|
+   |   |
+   |   |
+   -----`
+            },
+            {
+                id: 307,
+                title: "Crown",
+                category: "special",
+                content: `♛ ♛ ♛ ♛ ♛
+*  *  *  *
+|  |  |  |
+|__|__|__|
+|        |
+|________|`
+            },
+            {
+                id: 308,
+                title: "Lightning Bolt",
+                category: "special",
+                content: `   ████
+  ████
+ ████
+  ████
+   ████
+  ████
+ ████`
+            },
+            {
+                id: 309,
+                title: "Ocean Wave",
+                category: "special",
+                content: `~  ~~~  ~~~
+ ~~~  ~~~  ~
+~  ~~~  ~~~
+ ~~~  ~~~  ~
+🌊🌊🌊🌊🌊🌊`
+            },
+            {
+                id: 310,
+                title: "Mountain",
+                category: "special",
+                content: `        /\\
+       /  \\
+      / ☃️ \\
+     /  /\\  \\
+    /  /  \\  \\
+   /  /    \\  \\
+  /  /      \\  \\
+ /  /        \\  \\
+/__/____________\\__\\`
+            },
+            {
+                id: 311,
+                title: "Volcano",
+                category: "special",
+                content: `   🔥🔥🔥
+  🔥     🔥
+ /         \\
+/           \\
+|  🌋       |
+|___________|`
+            },
+            {
+                id: 312,
+                title: "Rainbow",
+                category: "special",
+                content: `   🔴🔴🔴🔴🔴
+  🟠🟠🟠🟠🟠🟠
+ 🟡🟡🟡🟡🟡🟡🟡
+🟢🟢🟢🟢🟢🟢🟢🟢
+🔵🔵🔵🔵🔵🔵🔵🔵🔵
+🟣🟣🟣🟣🟣🟣🟣🟣`
+            },
+            {
+                id: 313,
+                title: "Clock",
+                category: "special",
+                content: `   _____
+  /12   \\
+ | 11  1 |
+ |10    2|
+ |  \\   3|
+ | 9  / 4|
+  \\ 8  5/
+   \\ 7 /
+    ----`
+            },
+            {
+                id: 314,
+                title: "Trophy",
+                category: "special",
+                content: `   ___
+  /   \\
+ | 🏆 |
+  \\___/
+  |   |
+__|___|__
+|_______|`
+            },
+            {
+                id: 315,
+                title: "Music Note",
+                category: "special",
+                content: `  ♪───♪
+  |    |
+  |    |
+  ♩    ♩
+🎵🎶🎵🎶🎵`
+            },
+            {
+                id: 316,
+                title: "Camera",
+                category: "special",
+                content: `╔═══════════╗
+║  📷      ║
+║  ┌────┐  ║
+║  │    │  ║
+║  └────┘  ║
+╚═══════════╝`
+            },
+            {
+                id: 317,
+                title: "Football",
+                category: "special",
+                content: `   ____
+  / ⚽ \\
+ /  ||  \\
+|   ||   |
+ \\  ||  /
+  \\____/`
+            },
+            {
+                id: 318,
+                title: "Anchor",
+                category: "special",
+                content: `    ─┬─
+   _│_
+  / │ \\
+ │  │  │
+  \\_│_/
+    │
+  ──┴──`
+            },
+            {
+                id: 319,
+                title: "Airplane",
+                category: "special",
+                content: `    _
+   | \\
+   |  \\  ✈️
+___|___\\___
+    |  /
+    | /
+    |/`
+            },
+            {
+                id: 320,
+                title: "Tree of Life",
+                category: "special",
+                content: `      🌿
+    🌿🌿🌿
+  🌿🌿🌿🌿🌿
+🌿🌿🌿🌿🌿🌿🌿
+  🌿🌿🌿🌿🌿
+    🌿🌿🌿
+      |||
+      |||
+    _____`
+            },
+
+            // ========== NEW TEXT ARTS ==========
+            {
+                id: 321,
+                title: "Best Friends",
+                category: "text",
+                content: `╔══════════════════╗
+║  BEST FRIENDS 4  ║
+║     EVER!! 👫   ║
+╚══════════════════╝
+   🤝 💪 😊`
+            },
+            {
+                id: 322,
+                title: "Happy New Year",
+                category: "text",
+                content: `🎆🎆🎆🎆🎆🎆🎆
+🎇 HAPPY NEW YEAR! 🎇
+🎆🎆🎆🎆🎆🎆🎆
+     🥂🎉🎊
+   WELCOME 2025!`
+            },
+            {
+                id: 323,
+                title: "Merry Christmas",
+                category: "text",
+                content: `🎄🎄🎄🎄🎄🎄🎄
+🎅 MERRY CHRISTMAS! 🤶
+🎄🎄🎄🎄🎄🎄🎄
+    🎁🦌⛄🔔
+  HO HO HO! 🎅`
+            },
+            {
+                id: 324,
+                title: "Eid Mubarak",
+                category: "text",
+                content: `☪️═══════════════☪️
+║   EID MUBARAK!  ║
+║  عيد مبارك      ║
+☪️═══════════════☪️
+  🌙⭐🌙⭐🌙`
+            },
+            {
+                id: 325,
+                title: "Diwali Wishes",
+                category: "text",
+                content: `🪔═══════════════🪔
+║  HAPPY DIWALI!  ║
+║  शुभ दीपावली!   ║
+🪔═══════════════🪔
+🎇✨🎇✨🎇✨🎇`
+            },
+            {
+                id: 326,
+                title: "Miss You",
+                category: "text",
+                content: `💌══════════════💌
+║    MISS YOU!   ║
+║  😢💕😢        ║
+╚══════════════╝
+  Think of u daily`
+            },
+            {
+                id: 327,
+                title: "Get Well Soon",
+                category: "text",
+                content: `💊══════════════💊
+║ GET WELL SOON! ║
+║   🏥 ❤️ 🌸    ║
+╚══════════════╝
+   Stay Strong! 💪`
+            },
+            {
+                id: 328,
+                title: "Good Luck",
+                category: "text",
+                content: `🍀══════════════🍀
+║  GOOD LUCK!   ║
+║  🌟 You can! 🌟║
+╚══════════════╝
+    Believe! ✨`
+            },
+            {
+                id: 329,
+                title: "Thank You Fancy",
+                category: "text",
+                content: `✿═══════════════✿
+║   THANK YOU!  ║
+║  🙏 💖 🙏    ║
+╰═══════════════╯
+  Much appreciated`
+            },
+            {
+                id: 330,
+                title: "Welcome Home",
+                category: "text",
+                content: `🏠══════════════🏠
+║ WELCOME HOME! ║
+║  🎉 ❤️ 🎊    ║
+╚══════════════╝
+   Family = Love`
+            },
+            {
+                id: 331,
+                title: "Stay Safe",
+                category: "text",
+                content: `🛡️══════════════🛡️
+║   STAY SAFE!  ║
+║  😷 ✋ 💉    ║
+╚══════════════╝
+  Take care always`
+            },
+            {
+                id: 332,
+                title: "Dream Big",
+                category: "text",
+                content: `⭐══════════════⭐
+║   DREAM BIG!  ║
+║  🌟 💫 🌙    ║
+╚══════════════╝
+ Reach the stars!`
+            },
+            {
+                id: 333,
+                title: "Be Happy",
+                category: "text",
+                content: `😊══════════════😊
+║   BE HAPPY!   ║
+║  🌈 🌸 🌺    ║
+╚══════════════╝
+  Smile always! 😁`
+            },
+
+            // ========== NEW ROSE ARTS ==========
+            {
+                id: 334,
+                title: "Rose Arch",
+                category: "rose",
+                content: `🌹   🌹   🌹   🌹
+  🌹           🌹
+    🌹       🌹
+      🌹   🌹
+        🌹`
+            },
+            {
+                id: 335,
+                title: "Single Rose ASCII",
+                category: "rose",
+                content: `       _
+      / \\
+     /   \\
+    ( ❤️ )
+     \\   /
+      \\_/
+       |
+       |
+      ~~~`
+            },
+            {
+                id: 336,
+                title: "Rose Waterfall",
+                category: "rose",
+                content: `🌹🌹🌹🌹🌹🌹🌹🌹🌹
+  🌹🌹🌹🌹🌹🌹🌹
+    🌹🌹🌹🌹🌹
+      🌹🌹🌹
+        🌹`
+            },
+            {
+                id: 337,
+                title: "Rose Love Note",
+                category: "rose",
+                content: `🌹──────────🌹
+  Thinking of you
+    every day  
+    ❤️ Forever ❤️
+🌹──────────🌹`
+            },
+            {
+                id: 338,
+                title: "Four Roses",
+                category: "rose",
+                content: `🌹     🌹
+  ❤️ ❤️
+🌹     🌹`
+            },
+            {
+                id: 339,
+                title: "Rose Star",
+                category: "rose",
+                content: `    🌹
+  🌹  🌹
+🌹  ❤️  🌹
+  🌹  🌹
+    🌹`
+            },
+            {
+                id: 340,
+                title: "Rose Crown",
+                category: "rose",
+                content: `🌹🌹🌹🌹🌹
+ 🌹♛🌹♛🌹
+🌹🌹🌹🌹🌹
+   |   |
+ |_____|`
+            },
+            {
+                id: 341,
+                title: "Rose Diagonal",
+                category: "rose",
+                content: `🌹
+  🌹
+    🌹
+      🌹
+        🌹
+      🌹
+    🌹
+  🌹
+🌹`
+            },
+            {
+                id: 342,
+                title: "Roses and Stars",
+                category: "rose",
+                content: `🌹⭐🌹⭐🌹
+⭐🌹⭐🌹⭐
+🌹⭐💖⭐🌹
+⭐🌹⭐🌹⭐
+🌹⭐🌹⭐🌹`
+            },
+
+            // ========== NEW DESIGN ARTS ==========
+            {
+                id: 343,
+                title: "Galaxy Design",
+                category: "design",
+                content: `✧ ⋆ ˚ 🌌 ˚ ⋆ ✧
+⋆  ✦  🌠  ✦  ⋆
+ ✧ 🌟 ⭐ 🌟 ✧
+⋆  ✦  💫  ✦  ⋆
+✧ ⋆ ˚ 🌌 ˚ ⋆ ✧`
+            },
+            {
+                id: 344,
+                title: "Luxury Border",
+                category: "design",
+                content: `╔♛══════════════♛╗
+♛                    ♛
+║  LUXURY DESIGN  ║
+♛                    ♛
+╚♛══════════════♛╝`
+            },
+            {
+                id: 345,
+                title: "Fire Design",
+                category: "design",
+                content: `🔥🔥🔥🔥🔥
+🔥  FIRE  🔥
+🔥 DESIGN 🔥
+🔥🔥🔥🔥🔥`
+            },
+            {
+                id: 346,
+                title: "Ice Design",
+                category: "design",
+                content: `❄️❄️❄️❄️❄️
+❄️  ICE   ❄️
+❄️ DESIGN ❄️
+❄️❄️❄️❄️❄️`
+            },
+            {
+                id: 347,
+                title: "Art Deco Frame",
+                category: "design",
+                content: `╔══╦══╦══╦══╗
+╠══╬══╬══╬══╣
+║  ║ART DECO║  ║
+╠══╬══╬══╬══╣
+╚══╩══╩══╩══╝`
+            },
+            {
+                id: 348,
+                title: "Neon Sign",
+                category: "design",
+                content: `▄▄▄▄▄▄▄▄▄▄▄▄
+█ ░ NEON ░ █
+█ ░ SIGN ░ █
+▀▀▀▀▀▀▀▀▀▀▀▀`
+            },
+            {
+                id: 349,
+                title: "Pixel Frame",
+                category: "design",
+                content: `█ █ █ █ █ █ █
+█           █
+█  PIXEL    █
+█  PERFECT  █
+█           █
+█ █ █ █ █ █ █`
+            },
+            {
+                id: 350,
+                title: "Vintage Design",
+                category: "design",
+                content: `~•~•~•~•~•~•~
+•   VINTAGE   •
+~   STYLE     ~
+•   CLASSIC   •
+~•~•~•~•~•~•~`
+            },
+            {
+                id: 351,
+                title: "Matrix Design",
+                category: "design",
+                content: `010101010101
+101010101010
+010101010101
+101010101010
+010101010101`
+            },
+            {
+                id: 352,
+                title: "Art Nouveau",
+                category: "design",
+                content: `⚜️══════════⚜️
+ ∫ ART NOUVEAU ∫
+⚜️══════════⚜️
+   ✦ ❋ ✦ ❋ ✦`
+            },
+            {
+                id: 353,
+                title: "Tribal Design",
+                category: "design",
+                content: `▲△▲△▲△▲△▲
+△   TRIBAL  △
+▲  DESIGN   ▲
+△▲△▲△▲△▲△▲`
+            },
+            {
+                id: 354,
+                title: "Ocean Design",
+                category: "design",
+                content: `〰〰〰〰〰〰〰
+🌊 OCEAN 🌊
+〰 DESIGN 〰
+🌊🌊🌊🌊🌊🌊`
+            },
+            {
+                id: 355,
+                title: "Nature Design",
+                category: "design",
+                content: `🌿🌸🌿🌸🌿🌸🌿
+🌸  NATURE  🌸
+🌿  DESIGN  🌿
+🌸🌿🌸🌿🌸🌿🌸`
+            },
+            {
+                id: 356,
+                title: "Cyberpunk",
+                category: "design",
+                content: `▐▓▌▐▓▌▐▓▌▐▓▌
+▌CYBER PUNK▐
+▐▓▌▐▓▌▐▓▌▐▓▌
+█ 2077 MODE █`
+            },
+            {
+                id: 357,
+                title: "Steampunk",
+                category: "design",
+                content: `⚙️═══════════⚙️
+║  STEAMPUNK  ║
+⚙️═══════════⚙️
+   🔩 🔧 🔩`
+            },
+            {
+                id: 358,
+                title: "Pop Art",
+                category: "design",
+                content: `◉◉◉◉◉◉◉◉◉◉
+◉ POP  ART ◉
+◉ STYLE 🎨 ◉
+◉◉◉◉◉◉◉◉◉◉`
+            },
+            {
+                id: 359,
+                title: "Retro Pixel",
+                category: "design",
+                content: `░░░░░░░░░░░
+░ RETRO ░░░
+░ PIXEL ░░░
+░░░░░░░░░░░`
+            },
+            {
+                id: 360,
+                title: "Minimal Design",
+                category: "design",
+                content: `─────────────
+   minimal.
+─────────────
+   design.
+─────────────`
+            },
+            {
+                id: 361,
+                title: "Bold Design",
+                category: "design",
+                content: `███████████
+█ BOLD    █
+█ DESIGN  █
+███████████`
+            },
+            {
+                id: 362,
+                title: "Shadow Design",
+                category: "design",
+                content: `SHADOW DESIGN
+░░░░░░░░░░░░░
+ ▒▒▒▒▒▒▒▒▒▒▒
+  ▓▓▓▓▓▓▓▓▓▓
+   ██████████`
+            },
+            {
+                id: 363,
+                title: "3D Text",
+                category: "design",
+                content: `▄▄▄  ▄▄▄
+█ █  █ █
+█▀█  █▀█
+█ ▀▄▀ █
+█      █
+▀▀▀▀▀▀▀`
+            },
+
+            // ========== EXTRA EMOJI ARTS ==========
+            {
+                id: 364,
+                title: "Emoji Rainbow",
+                category: "emoji",
+                content: `🔴🟠🟡🟢🔵🟣
+🌈 RAINBOW 🌈
+🟣🔵🟢🟡🟠🔴`
+            },
+            {
+                id: 365,
+                title: "Emoji Space",
+                category: "emoji",
+                content: `🌌🌟⭐💫🌠🌌
+🌙☀️🪐🌍🌏🌎
+🚀👨‍🚀🛸🛰️🔭💫
+🌌🌟⭐💫🌠🌌`
+            },
+            {
+                id: 366,
+                title: "Emoji Garden",
+                category: "emoji",
+                content: `🌷🌸🌹🌺🌻🌼
+🍀🌿🌱🌾🎋🎍
+🦋🐝🐛🐞🐜🦗
+🌷🌸🌹🌺🌻🌼`
+            },
+            {
+                id: 367,
+                title: "Emoji Faces Row",
+                category: "emoji",
+                content: `😀😁😂🤣😃😄
+😅😆😊☺️😇🥰
+😘🥲😋😜😝😛
+🤑🤗🤭🤫🤔😐`
+            },
+            {
+                id: 368,
+                title: "Emoji Party",
+                category: "emoji",
+                content: `🎉🎊🎈🎁🎀🎗️
+🥳🎂🍰🧁🍭🍬
+🎵🎶🎸🥂🍾🎆
+🎉🎊🎈🎁🎀🎗️`
+            },
+            {
+                id: 369,
+                title: "Emoji Sports",
+                category: "emoji",
+                content: `⚽🏀🏈⚾🥎🎾
+🏐🏉🥏🎱🏓🏸
+🥊🥋🏋️🤸🏊🚴
+🏆🥇🥈🥉🎖️🏅`
+            },
+            {
+                id: 370,
+                title: "Emoji Kitchen",
+                category: "emoji",
+                content: `🍕🍔🌮🌯🥙🧆
+🍜🍝🍛🍲🥘🫕
+🥗🥦🥕🧅🧄🫑
+🍰🎂🧁🍩🍪🍫`
+            },
+            {
+                id: 371,
+                title: "Emoji Travel",
+                category: "emoji",
+                content: `✈️🚂🚢🚁🚀🛸
+🗺️🧭🏔️🏖️🏝️🌋
+🏙️🗽🗼🏯🏰💒
+🌍🌎🌏🌐🗺️🧭`
+            },
+
+            // ========== EXTRA SPECIAL ARTS ==========
+            {
+                id: 372,
+                title: "Indian Flag",
+                category: "special",
+                content: `🟧🟧🟧🟧🟧🟧🟧
+⬜⬜⬜⚙️⬜⬜⬜
+🟩🟩🟩🟩🟩🟩🟩
+  🇮🇳 JAI HIND 🇮🇳`
+            },
+            {
+                id: 373,
+                title: "Om Symbol",
+                category: "special",
+                content: `   ॐ
+  /│\\
+ / │ \\
+/  │  \\
+   │
+  ~~~
+🕉️ OM SHANTI 🕉️`
+            },
+            {
+                id: 374,
+                title: "Mosque",
+                category: "special",
+                content: `    ☪️
+   /|\\ 
+  / | \\
+ /  |  \\
+|   |   |
+|  🕌   |
+|_______|`
+            },
+            {
+                id: 375,
+                title: "Peace Sign",
+                category: "special",
+                content: `  ─────
+ /       \\
+|    |    |
+|   /|    |
+|  / |    |
+ \\  /    /
+  ─────
+  ☮️ PEACE ☮️`
+            },
+            {
+                id: 376,
+                title: "Birthday Cake",
+                category: "special",
+                content: `    🕯️🕯️🕯️
+   ████████
+  ██ HAPPY ██
+ ██ BIRTHDAY██
+  ████████
+   ┤      ├
+   └──────┘`
+            },
+            {
+                id: 377,
+                title: "Gift Box",
+                category: "special",
+                content: `  ╔══╦══╗
+  ║🎀║🎀║
+ ╔╬══╬══╬╗
+ ║║  🎁  ║║
+ ║╚══════╝║
+ ╚════════╝`
+            },
+            {
+                id: 378,
+                title: "Lantern",
+                category: "special",
+                content: `   /───\\
+  │ 🏮 │
+  │     │
+  │     │
+   \\───/
+    │ │
+    │ │`
+            },
+            {
+                id: 379,
+                title: "Sword",
+                category: "special",
+                content: `    ⚔️
+   /|
+  / |
+ /  |
+/   |
+\\   |
+ \\  |
+  \\ |
+   \\|
+    ─`
+            },
+            {
+                id: 380,
+                title: "Shield",
+                category: "special",
+                content: `  ╔═════╗
+  ║  ⚔️ ║
+  ║  🛡️ ║
+  ║     ║
+  ╚══╤══╝
+     │
+     ▼`
+            },
+            {
+                id: 381,
+                title: "Hourglass",
+                category: "special",
+                content: `╔═══════╗
+║███████║
+║ █████ ║
+║  ███  ║
+║   █   ║
+║  ███  ║
+║ █████ ║
+║███████║
+╚═══════╝
+⏳ TIME ⏳`
+            },
+            {
+                id: 382,
+                title: "Book",
+                category: "special",
+                content: `  ___________
+ /           /|
+/___________/ |
+|           | |
+| 📖 READ   | |
+|           | /
+|___________|/`
+            },
+            {
+                id: 383,
+                title: "Pencil",
+                category: "special",
+                content: `    /\\
+   /  \\
+  /    \\
+ /      \\
+/________\\
+|        |
+|  ✏️    |
+|        |
+|________|`
+            },
+            {
+                id: 384,
+                title: "Telephone",
+                category: "special",
+                content: `╔═══════╗
+║  📞   ║
+║ _   _ ║
+║(  o  )║
+║ ─────║
+╚═══════╝`
+            },
+            {
+                id: 385,
+                title: "Computer",
+                category: "special",
+                content: `╔═════════════╗
+║  💻 SCREEN  ║
+║             ║
+║  [    ]     ║
+╚═════════════╝
+  ───────────
+  [_________]`
+            },
+            {
+                id: 386,
+                title: "Sunflower",
+                category: "special",
+                content: `  \\  |  /
+ ─ 🌻 ─
+  /  |  \\
+    |||
+    |||
+   _|||_`
+            },
+            {
+                id: 387,
+                title: "Cactus",
+                category: "special",
+                content: `   ─┬─
+   │ │
+ ──┤ ├──
+   │ │
+   │ │
+   │ │
+ ──┴─┴──`
+            },
+            {
+                id: 388,
+                title: "Bamboo",
+                category: "special",
+                content: `🎋🎋🎋🎋🎋
+ ═══════
+🎋🎋🎋🎋🎋
+ ═══════
+🎋🎋🎋🎋🎋`
+            },
+            {
+                id: 389,
+                title: "Lotus",
+                category: "special",
+                content: `   🌸
+  🌸🌸
+ 🌸🌸🌸
+🌸🌸🌸🌸
+  ||||
+  ~~~~`
+            },
+            {
+                id: 390,
+                title: "Cherry Blossom",
+                category: "special",
+                content: `  🌸  🌸  🌸
+ 🌸  🌸  🌸
+  🌸  🌸  🌸
+     🌸
+    ████
+    ████`
+            },
+
+            // ========== NEW HINDI / INDIAN ARTS ==========
+            {
+                id: 391,
+                title: "Namaste",
+                category: "special",
+                content: `🙏 नमस्ते 🙏
+═══════════
+  🌺 🌼 🌺
+नमस्ते मित्र!
+  ❤️ India ❤️`
+            },
+            {
+                id: 392,
+                title: "Desh Bhakti",
+                category: "special",
+                content: `🇮🇳══════════🇮🇳
+ जय हिंद! 🇮🇳
+  वन्दे मातरम्!
+🇮🇳══════════🇮🇳
+  🌺❤️🌺`
+            },
+            {
+                id: 393,
+                title: "Good Morning Hindi",
+                category: "text",
+                content: `🌅══════════🌅
+║ सुप्रभात! ║
+║Good Morning║
+║  ☀️ 🌸 ☀️ ║
+╚════════════╝
+Have a nice day!`
+            },
+            {
+                id: 394,
+                title: "Good Night Hindi",
+                category: "text",
+                content: `🌙══════════🌙
+║ शुभ रात्रि! ║
+║ Good Night! ║
+║  ⭐ 😴 ⭐  ║
+╚════════════╝
+Sweet dreams! 💤`
+            },
+            {
+                id: 395,
+                title: "Friendship",
+                category: "love",
+                content: `🤝══════════🤝
+║ FRIENDSHIP ║
+║  दोस्ती   ║
+║  👫 👬 👭 ║
+╚════════════╝
+Best friends forever`
+            },
+            {
+                id: 396,
+                title: "Mother Love",
+                category: "love",
+                content: `👩══════════👩
+║   माँ की   ║
+║  ममता 💕  ║
+║ MOM = LOVE ║
+╚════════════╝
+❤️ Mother = God ❤️`
+            },
+
+            // ========== WHATSAPP STATUS ARTS ==========
+            {
+                id: 397,
+                title: "Attitude Status",
+                category: "special",
+                content: `😎══════════😎
+║  ATTITUDE  ║
+║   is my    ║
+║ SIGNATURE  ║
+╚════════════╝
+   Deal with it!`
+            },
+            {
+                id: 398,
+                title: "Savage Status",
+                category: "special",
+                content: `🔥══════════🔥
+║  I'm not   ║
+║  perfect   ║
+║ but I'm    ║
+║  LIMITED   ║
+╚════════════╝
+   Edition! 💯`
+            },
+            {
+                id: 399,
+                title: "Positive Vibe",
+                category: "special",
+                content: `✨══════════✨
+║  GOOD VIBES ║
+║    ONLY!    ║
+║  🌈 💫 🌟  ║
+╚════════════╝
+  Spread love!`
+            },
+            {
+                id: 400,
+                title: "Self Love",
+                category: "love",
+                content: `💪══════════💪
+║  LOVE      ║
+║  YOURSELF  ║
+║  FIRST! 💕 ║
+╚════════════╝
+You are enough!`
+            },
+            {
+                id: 401,
+                title: "Hustle Mode",
+                category: "special",
+                content: `⚡══════════⚡
+║   HUSTLE   ║
+║    MODE    ║
+║  ON! 💯   ║
+╚════════════╝
+ No days off! 🏋️`
+            },
+            {
+                id: 402,
+                title: "Chill Mode",
+                category: "special",
+                content: `😎══════════😎
+║   CHILL    ║
+║   MODE     ║
+║ ACTIVATED! ║
+╚════════════╝
+  Relax & vibe!`
+            },
+            {
+                id: 403,
+                title: "King Mode",
+                category: "special",
+                content: `♔══════════♔
+║   KING     ║
+║   MODE     ║
+║  ON! 👑   ║
+╚════════════╝
+ Long live king!`
+            },
+            {
+                id: 404,
+                title: "Queen Mode",
+                category: "special",
+                content: `♛══════════♛
+║   QUEEN    ║
+║   MODE     ║
+║  ON! 👸   ║
+╚════════════╝
+ Long live queen!`
+            },
+            {
+                id: 405,
+                title: "No Entry Art",
+                category: "special",
+                content: `🚫══════════🚫
+║  ENTRY     ║
+║  DENIED    ║
+║  ⛔ ❌ ⛔  ║
+╚════════════╝
+  Stay away!`
+            },
+            {
+                id: 406,
+                title: "VIP Art",
+                category: "design",
+                content: `★══════════★
+║    VIP     ║
+║   ACCESS   ║
+║  💎 🥂 💎 ║
+╚════════════╝
+ Exclusive only!`
+            },
+            {
+                id: 407,
+                title: "Sad Art",
+                category: "emoji",
+                content: `😢══════════😢
+║  FEELING   ║
+║    SAD     ║
+║  💔 😭 💔 ║
+╚════════════╝
+ It will be ok!`
+            },
+            {
+                id: 408,
+                title: "Lonely Heart",
+                category: "heart",
+                content: `💔   💔
+  💔   💔
+    💔
+  💔   💔
+💔   💔
+Lonely no more`
+            },
+            {
+                id: 409,
+                title: "Heart Universe",
+                category: "heart",
+                content: `🌌💕🌌💕🌌
+💕🌌💕🌌💕
+🌌💕❤️💕🌌
+💕🌌💕🌌💕
+🌌💕🌌💕🌌`
+            },
+            {
+                id: 410,
+                title: "Infinity Heart",
+                category: "love",
+                content: `  ∞ ❤️ ∞
+❤️       ❤️
+  ∞ 💕 ∞
+💕       💕
+  ∞ 💖 ∞`
+            },
+            {
+                id: 411,
+                title: "Pixel Rose",
+                category: "rose",
+                content: `🟥🟥🟥🟥🟥
+🟥🌹🟥🌹🟥
+🟥🟥🌹🟥🟥
+🟩🟥🌹🟥🟩
+🟩🟩🌿🟩🟩`
+            },
+            {
+                id: 412,
+                title: "Anchor Love",
+                category: "love",
+                content: `⚓ + ❤️ = 💕
+Love is our
+  anchor!
+⚓──────⚓
+  I love you`
+            },
+            {
+                id: 413,
+                title: "Cloud Heart",
+                category: "heart",
+                content: `  ☁️  ☁️
+☁️ ❤️ ❤️ ☁️
+  ❤️❤️❤️
+   ❤️❤️
+    ❤️
+     💕`
+            },
+            {
+                id: 414,
+                title: "Sunset Love",
+                category: "love",
+                content: `🌅 SUNSET LOVE 🌅
+~~~~~~~~~~~~~~~~~
+  👫 watching
+  the sunset
+  together 💕
+~~~~~~~~~~~~~~~~~`
+            },
+            {
+                id: 415,
+                title: "Piano Keys",
+                category: "design",
+                content: `█ █ █ █ █ █ █
+█ █ █ █ █ █ █
+█│█│█│█│█│█│█
+│ │ │ │ │ │ │
+│ │ │ │ │ │ │
+│_│_│_│_│_│_│
+🎹 PIANO 🎹`
+            },
+            {
+                id: 416,
+                title: "Guitar",
+                category: "special",
+                content: `   ___
+  /   \\
+ | 🎸 |
+  \\   /
+   ───
+   |||
+   |||
+   ───
+🎵 MUSIC 🎵`
+            },
+            {
+                id: 417,
+                title: "Drumset",
+                category: "special",
+                content: `  ___   ___
+ /   \\ /   \\
+| 🥁 | 🥁 |
+ \\___/ \\___/
+╔════════════╗
+║     🥁     ║
+╚════════════╝`
+            },
+            {
+                id: 418,
+                title: "DJ Turntable",
+                category: "design",
+                content: `╔════════════╗
+║ 🎵  DJ   🎵║
+║  [  O  ]   ║
+║  [ 🎧 ]   ║
+║  [     ]   ║
+╚════════════╝`
+            },
+            {
+                id: 419,
+                title: "Cricket",
+                category: "special",
+                content: `    🏏
+   /│
+  / │
+ /  │
+🏏  │
+    │
+   🏏
+🏟️ CRICKET 🏟️`
+            },
+            {
+                id: 420,
+                title: "Chess Board",
+                category: "pattern",
+                content: `♜♞♝♛♚♝♞♜
+♟♟♟♟♟♟♟♟
+░█░█░█░█
+█░█░█░█░
+░█░█░█░█
+♙♙♙♙♙♙♙♙
+♖♘♗♕♔♗♘♖`
+            },
+
+        ];
+
+// ══════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════
+let currentCat = 'all';
+let currentSearch = '';
+let currentAPI = 'deepseek';
+let currentArt = null;
+let favorites = JSON.parse(localStorage.getItem('favArts') || '[]');
+let recentlyCopied = JSON.parse(localStorage.getItem('recentArts') || '[]');
+
+// ══════════════════════════════════════════
+// CATEGORIES
+// ══════════════════════════════════════════
+const categories = [
+  { id: 'all', label: '✨ All' },
+  { id: 'heart', label: '❤️ Hearts' },
+  { id: 'love', label: '💕 Love' },
+  { id: 'animal', label: '🐾 Animals' },
+  { id: 'emoji', label: '😊 Emoji' },
+  { id: 'pattern', label: '🔷 Patterns' },
+  { id: 'special', label: '⭐ Special' },
+  { id: 'text', label: '📝 Text' },
+  { id: 'rose', label: '🌹 Rose' },
+  { id: 'design', label: '🎨 Design' },
+];
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildCatStrip();
+  renderArts();
+  renderFavs();
+  renderRecent();
+  updateFavCount();
+  document.getElementById('totalCount').textContent = allArts.length + '+';
+
+  // Scroll FAB
+  document.querySelector('.main').addEventListener('scroll', e => {
+    document.getElementById('fab').classList.toggle('show', e.target.scrollTop > 300);
+  });
+
+  // AI ideas
+  const ideas = ['❤️ Heart','🌹 Rose','🐱 Cat','🐉 Dragon','🏠 House','🌙 Moon','⭐ Star','🦋 Butterfly','💀 Skull','🌊 Wave','🔥 Fire','🎄 Christmas','🎂 Birthday','🐬 Dolphin','🦁 Lion'];
+  const ideaWrap = document.getElementById('ideaTags');
+  ideas.forEach(idea => {
+    const b = document.createElement('button');
+    b.textContent = idea;
+    b.style.cssText = 'padding:7px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;color:#a0aec0;font-size:12px;cursor:pointer;font-family:var(--font)';
+    b.onclick = () => { document.getElementById('aiPrompt').value = idea.split(' ').slice(1).join(' '); generateAI(); };
+    ideaWrap.appendChild(b);
+  });
+
+  // PWA install
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); window._installPrompt = e;
+    document.getElementById('installBanner').classList.remove('hidden');
+  });
+  document.getElementById('installBtn').onclick = async () => {
+    if (window._installPrompt) {
+      window._installPrompt.prompt();
+      const r = await window._installPrompt.userChoice;
+      if (r.outcome === 'accepted') document.getElementById('installBanner').classList.add('hidden');
+    }
+  };
+});
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  document.querySelector('.main').scrollTop = 0;
+}
+
+function openCat(cat) {
+  currentCat = cat;
+  goScreen('browse');
+  buildCatStrip();
+  renderArts();
+}
+
+// ══════════════════════════════════════════
+// CATEGORIES STRIP
+// ══════════════════════════════════════════
+function buildCatStrip() {
+  const strip = document.getElementById('catStrip');
+  strip.innerHTML = '';
+  categories.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-chip' + (c.id === currentCat ? ' active' : '');
+    const count = c.id === 'all' ? allArts.length : allArts.filter(a => a.category === c.id).length;
+    btn.textContent = c.label + ' (' + count + ')';
+    btn.onclick = () => { currentCat = c.id; buildCatStrip(); renderArts(); };
+    strip.appendChild(btn);
+  });
+}
+
+// ══════════════════════════════════════════
+// FILTER & RENDER ARTS
+// ══════════════════════════════════════════
+function filterArts() {
+  currentSearch = document.getElementById('searchInput').value.toLowerCase();
+  renderArts();
+}
+
+function getFiltered() {
+  return allArts.filter(a => {
+    const matchCat = currentCat === 'all' || a.category === currentCat;
+    const matchSearch = !currentSearch ||
+      a.title.toLowerCase().includes(currentSearch) ||
+      a.category.toLowerCase().includes(currentSearch) ||
+      a.content.toLowerCase().includes(currentSearch);
+    return matchCat && matchSearch;
+  });
+}
+
+function renderArts() {
+  const grid = document.getElementById('artGrid');
+  const arts = getFiltered();
+  grid.innerHTML = '';
+
+  if (arts.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">😕 कोई art नहीं मिला</div>';
+    return;
+  }
+
+  arts.forEach(art => grid.appendChild(makeCard(art, false)));
+}
+
+// ══════════════════════════════════════════
+// CARD MAKER
+// ══════════════════════════════════════════
+function makeCard(art, isFav) {
+  const isSaved = favorites.includes(art.id);
+  const card = document.createElement('div');
+  card.className = 'art-card';
+  card.innerHTML = `
+    <div class="art-card-header">
+      <div class="art-card-title">${art.title}</div>
+      <div class="art-badge">${art.category}</div>
+    </div>
+    <div class="art-preview">${escHtml(art.content)}</div>
+    <div class="art-actions">
+      <button class="art-btn copy-btn" onclick="quickCopy(event,${art.id})">📋 Copy</button>
+      <button class="art-btn view-btn" onclick="openSheet(${art.id})">👁️ View</button>
+    </div>
+  `;
+  return card;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ══════════════════════════════════════════
+// COPY
+// ══════════════════════════════════════════
+function quickCopy(e, id) {
+  e.stopPropagation();
+  const art = allArts.find(a => a.id === id);
+  if (!art) return;
+  copyText(art.content);
+  addRecent(art);
+}
+
+function copyText(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => showToast('✅ Copy हो गया!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('✅ Copy हो गया!');
+  }
+}
+
+function addRecent(art) {
+  recentlyCopied = [art.id, ...recentlyCopied.filter(id => id !== art.id)].slice(0, 10);
+  localStorage.setItem('recentArts', JSON.stringify(recentlyCopied));
+  renderRecent();
+}
+
+// ══════════════════════════════════════════
+// BOTTOM SHEET
+// ══════════════════════════════════════════
+function openSheet(id) {
+  const art = allArts.find(a => a.id === id);
+  if (!art) return;
+  currentArt = art;
+  document.getElementById('sheetTitle').textContent = art.title;
+  document.getElementById('sheetContent').textContent = art.content;
+  document.getElementById('sheetOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheetBtn() {
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeSheet(e) {
+  if (e.target === document.getElementById('sheetOverlay')) closeSheetBtn();
+}
+
+function copySheet() {
+  if (!currentArt) return;
+  copyText(currentArt.content);
+  addRecent(currentArt);
+}
+
+function shareSheet() {
+  if (!currentArt) return;
+  if (navigator.share) {
+    navigator.share({ title: currentArt.title, text: currentArt.content });
+  } else {
+    copyText(currentArt.content);
+    showToast('📋 Share के लिए Copy किया!');
+  }
+}
+
+// ══════════════════════════════════════════
+// FAVORITES
+// ══════════════════════════════════════════
+function toggleFav(id) {
+  if (favorites.includes(id)) {
+    favorites = favorites.filter(f => f !== id);
+    showToast('💔 हटाया गया');
+  } else {
+    favorites.push(id);
+    showToast('❤️ Save हो गया!');
+  }
+  localStorage.setItem('favArts', JSON.stringify(favorites));
+  renderFavs();
+  updateFavCount();
+}
+
+function renderFavs() {
+  const grid = document.getElementById('favGrid');
+  const empty = document.getElementById('favEmpty');
+  grid.innerHTML = '';
+  if (favorites.length === 0) {
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  favorites.forEach(id => {
+    const art = allArts.find(a => a.id === id);
+    if (art) grid.appendChild(makeCard(art, true));
+  });
+}
+
+function updateFavCount() {
+  document.getElementById('favCount').textContent = favorites.length;
+}
+
+// ══════════════════════════════════════════
+// RECENTLY COPIED
+// ══════════════════════════════════════════
+function renderRecent() {
+  const strip = document.getElementById('recentStrip');
+  if (recentlyCopied.length === 0) return;
+  strip.innerHTML = '';
+  recentlyCopied.forEach(id => {
+    const art = allArts.find(a => a.id === id);
+    if (!art) return;
+    const card = document.createElement('div');
+    card.className = 'recent-card';
+    card.innerHTML = `
+      <div class="recent-art-text">${escHtml(art.content)}</div>
+      <div class="recent-card-foot">${art.title}</div>
+    `;
+    card.onclick = () => openSheet(art.id);
+    strip.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════
+// AI GENERATOR
+// ══════════════════════════════════════════
+function selAPI(el) {
+  document.querySelectorAll('.api-chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  currentAPI = el.dataset.api;
+}
+
+async function generateAI() {
+  const prompt = document.getElementById('aiPrompt').value.trim();
+  if (!prompt) { showToast('⚠️ कुछ लिखो!'); return; }
+
+  const btn = document.getElementById('aiGoBtn');
+  const loader = document.getElementById('aiLoader');
+  const resultBox = document.getElementById('aiResultBox');
+  btn.disabled = true;
+  loader.classList.add('show');
+  resultBox.classList.remove('show');
+
+  try {
+    let art;
+    if (currentAPI === 'deepseek') art = await callDeepSeek(prompt);
+    else art = await callGemini(prompt);
+    document.getElementById('aiResultContent').textContent = art;
+    resultBox.classList.add('show');
+    showToast('✅ Art बन गया!');
+  } catch(e) {
+    document.getElementById('aiResultContent').textContent = mockArt(prompt);
+    resultBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    loader.classList.remove('show');
+  }
+}
+
+async function callDeepSeek(prompt) {
+  const r = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer sk-06b0221c0a544f9f947cc93df1fd3bb1' },
+    body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: 'You are an ASCII art generator. Create beautiful ASCII art.' }, { role: 'user', content: `Create ASCII art for: ${prompt}. Return only the art.` }], max_tokens: 500 })
+  });
+  const d = await r.json();
+  return d.choices[0].message.content;
+}
+
+async function callGemini(prompt) {
+  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyB6CVb-q-J_OC8f0GCPlKelbn9HEkFgeUE', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: `Create ASCII art for: ${prompt}. Return only the art.` }] }] })
+  });
+  const d = await r.json();
+  return d.candidates[0].content.parts[0].text;
+}
+
+function mockArt(p) {
+  return `✨══════════════✨\n✨   ${p}   ✨\n✨══════════════✨\n    🎨 Beautiful Art 🎨`;
+}
+
+function copyAI() {
+  const c = document.getElementById('aiResultContent').textContent;
+  if (c) copyText(c);
+}
+
+// ══════════════════════════════════════════
+// TOAST & UTILS
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function scrollTop() {
+  document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════
+// SERVICE WORKER
+// ══════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
